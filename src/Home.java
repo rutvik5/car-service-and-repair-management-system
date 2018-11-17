@@ -11,10 +11,12 @@ class Home{
     int user_choice = t.nextInt();
     switch(user_choice){
       case 1: login.displayLogin();
+      break;
       case 2: signup.displaySignUp();
+      break;
       case 3: return;
       default: System.out.println("Please enter a valid choice");
-
+displayHomepage();
     }
   }
 }

@@ -9,7 +9,9 @@ public class JDBCConnection {
 	static final String jdbcURL = "jdbc:oracle:thin:@orca.csc.ncsu.edu:1521:orcl01";
 
 	public static void main(String[] args) {
-		try {
+		Home home = new Home();
+		home.displayHomepage();
+		/*try {
 
 			// Load the driver. This creates an instance of the driver
 			// and calls the registerDriver method to make Oracle Thin
@@ -102,7 +104,7 @@ public class JDBCConnection {
 				rs.close();
 			} catch (Throwable whatever) {
 			}
-		}
+		}*/
 	}
 
 }
