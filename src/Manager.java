@@ -28,19 +28,31 @@ public class Manager{
 	  int user_choice = t.nextInt();
 	  switch(user_choice){
       case 1: emp.displayProfile();
+      break;
       case 2: emp.viewCustomerProfile();
+      break;
       case 3: addEmployee();
+      break;
       case 4: payroll();
+      break;
       case 5: inventory();
+      break;
       case 6: orders();
+      break;
       case 7: notifications();
+      break;
       case 8: addNewCarModel();
+      break;
       case 9: getCarServiceDetails();
+      break;
       case 10:getServiceHistory();
+      break;
       case 11:getInvoices();
+      break;
       case 12:home.displayHomepage();
+      break;
       default: System.out.println("Please enter a valid choice");
-
+      break;
     }
 	  t.close();
 	  
@@ -82,8 +94,11 @@ private void addEmployee () {
 	  int choice = t.nextInt();
 	  switch (choice) {
 	  case 1: orderHistory();
+	  break;
 	  case 2: newOrder();
+	  break;
 	  case 3: displayManagerLanding();
+	  break;
 	  default: System.out.println("Please enter a valid choice");
 	  }
 	  t.close();
@@ -105,7 +120,9 @@ private void addEmployee () {
 	  int choice = t.nextInt();
 	  switch (choice) {
 	  case 1: placeorder();
+	  break;
 	  case 2: orders();
+	  break;
 	  default: System.out.println("Please enter a valid choice");
 	  }
 	  t.close();
@@ -131,7 +148,9 @@ private void addEmployee () {
 	  int choice = t.nextInt();
 	  switch (choice) {
 	  case 1: getOrderDetails();
+	  break;
 	  case 2: displayManagerLanding();
+	  break;
 	  default: System.out.println("Please enter a valid choice");
 	  }
 	  t.close();
@@ -153,7 +172,9 @@ private void addNewCarModel() {
 	  int choice = t.nextInt();
 	  switch (choice) {
 	  case 1: addCarModel();
+	  break;
 	  case 2: displayManagerLanding();
+	  break;
 	  default: System.out.println("Please enter a valid choice");
 	  }
 	  t.close();

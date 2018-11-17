@@ -14,7 +14,8 @@ class Home{
       break;
       case 2: signup.displaySignUp();
       break;
-      case 3: return;
+      case 3: System.out.println("Thanks for visiting this portal....!!!!");
+      break;
       default: System.out.println("Please enter a valid choice");
 displayHomepage();
     }
