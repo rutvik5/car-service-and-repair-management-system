@@ -15,7 +15,7 @@ class Login{
     System.out.print("Password:\t");
     String user_password= t.nextLine();
     System.out.println("");
-    if (user_id.equals("abc") && user_password.equalsIgnoreCase("abc")) {
+    if (user_id.equals("abc") && user_password.equals("abc")) {
     	enterPortal(t, home);
     } else {
     	System.out.println("Invalid Username/password");

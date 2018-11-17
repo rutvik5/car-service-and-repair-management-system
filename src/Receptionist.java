@@ -8,8 +8,8 @@ class Receptionist{
     Employee employee= new Employee();
 
     System.out.println("Please select one of the following");
-    System.out.println("1. Profile" + " 2. View Customer Profile" + "\n" + " 3. Register Car" + "\n" + "  4. Service History" + "\n" + "5. Schedule Service" + "\n" + "6. Reschedule Service" + "\n" + "7. Invoices" + "\n"
-                        +"8. Daily Task Update Inventory" + "\n" + "9. Daily Task- Record Deliveries" + "\n" + " 10. Logout");
+    System.out.println("1. Profile\n" + " 2. View Customer Profile" + "\n" + "3. Register Car" + "\n" + "4. Service History" + "\n" + "5. Schedule Service" + "\n" + "6. Reschedule Service" + "\n" + "7. Invoices" + "\n"
+                        +"8. Daily Task Update Inventory" + "\n" + "9. Daily Task- Record Deliveries" + "\n" + "10. Logout");
 
     int user_choice = t.nextInt();
 
@@ -307,11 +307,11 @@ break;
                 String order_id= t.next();
 
                 System.out.println("Run a task to update the status of any pending orders whose items have"
-                +"arrived to “complete” and update their counts, and then show a message displaying whether the"
+                +"arrived to â€œcompleteâ€� and update their counts, and then show a message displaying whether the"
                 +"task ran successfully or not.");
 
                 System.out.println("Just before going back, change the status of any pending orders which"
-                                    +"did not arrive and are past the delivery window to “delayed” and generate"
+                                    +"did not arrive and are past the delivery window to â€œdelayedâ€� and generate"
                                   +"  a notification to the manager");
 
 
