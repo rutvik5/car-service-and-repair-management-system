@@ -1,8 +1,17 @@
+import java.sql.SQLException;
 import java.util.Scanner;
 
 class Home{
   public void displayHomepage(){
-
+	  DBUtility dbu = new DBUtility();
+		dbu.createDBConnection(JDBCConnection.user, JDBCConnection.password);
+		try {
+			dbu.getStmt().executeUpdate("CREATE TABLE COFFEES1 " + "(COF_NAME VARCHAR(32), SUP_ID INTEGER, "
+					+ "PRICE FLOAT, SALES INTEGER, TOTAL INTEGER)");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     Scanner t= new Scanner(System.in);
     SignUp signup= new SignUp();
     Login login= new Login();
@@ -15,6 +24,7 @@ class Home{
       case 2: signup.displaySignUp();
       break;
       case 3: System.out.println("Thanks for visiting this portal....!!!!");
+      dbu.closeDBConnection();
       break;
       default: System.out.println("Please enter a valid choice");
 displayHomepage();
