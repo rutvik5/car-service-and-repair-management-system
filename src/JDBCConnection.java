@@ -7,10 +7,21 @@ import java.util.Scanner;
 public class JDBCConnection {
 
 	static final String jdbcURL = "jdbc:oracle:thin:@orca.csc.ncsu.edu:1521:orcl01";
+	static String user;
+	static String password;
 
 	public static void main(String[] args) {
+		Scanner s = new Scanner(System.in);
+		System.out.println("Connecting to DB...");
+		System.out.println("Enter DB userame");
+		user = s.nextLine();
+		System.out.println("Enter DB password");
+		password = s.nextLine();
+		
+		
 		Home home = new Home();
 		home.displayHomepage();
+		
 		/*try {
 
 			// Load the driver. This creates an instance of the driver
@@ -22,7 +33,7 @@ public class JDBCConnection {
 			Scanner scanner = new Scanner(System.in);
 			String user = scanner.nextLine(); // For example, "jsmith"
 			String passwd = scanner.nextLine(); // Your 9 digit student ID number or password
-
+			
 			Connection conn = null;
 			Statement stmt = null;
 			ResultSet rs = null;
@@ -104,7 +115,8 @@ public class JDBCConnection {
 				rs.close();
 			} catch (Throwable whatever) {
 			}
-		}*/
-	}
+		}
+	}*/
 
+}
 }
