@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.Connection;
 
 class Home{
+	Connection connection;
   public void displayHomepage(){
 	  /*DBUtility dbu = new DBUtility();
 		dbu.createDBConnection(JDBCConnection.user, JDBCConnection.password);
@@ -20,11 +21,12 @@ class Home{
     ResultSet rs= null;
 
     try{
-      Connection connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
+      connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
 
       String query= "CREATE TABLE COFFEES1 " + "(COF_NAME VARCHAR(32), SUP_ID INTEGER, "
 					+ "PRICE FLOAT, SALES INTEGER, TOTAL INTEGER)";
 
+      stmt=connection.createStatement();
       stmt.executeUpdate(query);
       rs = stmt.executeQuery("SELECT COF_NAME, PRICE FROM COFFEES1");
 
@@ -39,6 +41,7 @@ class Home{
     }catch(SQLException e){
       System.out.println("Connection Failed! Check output console");
       e.printStackTrace();
+      DBUtility.close(connection);
       return;
     }
     Scanner t= new Scanner(System.in);

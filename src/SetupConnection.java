@@ -11,18 +11,12 @@ public class SetupConnection{
 
     Home home = new Home();
 
-    System.out.print("Enter username: ");
-    SetupConnection.username= t.nextLine();
-    System.out.println("");
+    System.out.println("Enter username: ");
+    username= t.nextLine();
 
-    System.out.print("Enter password: ");
-    SetupConnection.password= t.nextLine();
-    System.out.println("");
-    try{
-        DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
-    }catch(SQLException e){
-      e.printStackTrace();
-    }
-    //home.displayHomepage();
+    System.out.println("Enter password: ");
+    password= t.nextLine();
+   
+    home.displayHomepage();
   }
 }
