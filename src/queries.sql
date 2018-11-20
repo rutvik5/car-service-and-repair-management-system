@@ -33,3 +33,10 @@ SELECT Cu.CustID, Cu.Cust_Name, Cu.Cust_email, Cu.Cust_address, Cu.Cust_Phone, C
 FROM Customer Cu, Cars C, GoesTo G
 WHERE
 Cust_email =? AND Cu.CustID = G.CustID AND G.LicensePlateID = C.LicensePlateID
+
+Receptionist->registerCar(Mohit?Aditya)
+Receptionist->scheduleService
+Receptionist-> rescheduleService
+
+Receptionist->invoices
+SELECT S.ServiceID, A.start_time, Slot, R.LicensePlateID, R.Mechanic_Preferance 
