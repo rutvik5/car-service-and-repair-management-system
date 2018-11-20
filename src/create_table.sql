@@ -1,12 +1,12 @@
 CREATE TABLE Service_Center (
-    CenterID int NOT NULL PRIMARY KEY,
+    CenterID varchar(255) NOT NULL PRIMARY KEY,
     Center_Name varchar(255) NOT NULL,
     Center_Address varchar(255),
     Center_Tele varchar(255)
 );
 
 CREATE TABLE Inventory (
-    CenterID int,
+    CenterID varchar(255),
 	Car_model varchar(100),
     PartID int ,
     Part_Name varchar(255),
@@ -16,7 +16,7 @@ CREATE TABLE Inventory (
     Min_Order int,
 	Warranty int,
 CONSTRAINT PK_Inventory PRIMARY KEY ( CenterID, PartID),
-CONSTRAINT FK_Inventory FOREIGN KEY (CenterID)REFERENCES Service_Center(CenterID) ON  DELETE CASCADE   
+CONSTRAINT FK_Inventory FOREIGN KEY (CenterID)REFERENCES Service_Center(CenterID) ON  DELETE CASCADE
 );
 
 CREATE TABLE Customer (
@@ -57,8 +57,8 @@ CREATE TABLE BasicService (
     BasicServiceID int,
     Basic_Service_Name varchar(255),
     Labour_Charge_Per_Hour float,
-    Hours_Required float,  
-    CONSTRAINT PK_BasicService PRIMARY KEY ( BasicServiceID)          
+    Hours_Required float,
+    CONSTRAINT PK_BasicService PRIMARY KEY ( BasicServiceID)
 );
 
 Create table PartRequired_car_model (
@@ -135,7 +135,7 @@ REFERENCES Service(ServiceID) ON DELETE CASCADE
 );
 
 CREATE TABLE OrderPart(
-CenterID int,
+CenterID varchar(255),
 OrderID int PRIMARY KEY,
 Order_date DATE,
 Part_ID  int NOT NULL,
@@ -188,7 +188,7 @@ Role varchar(255) NOT NULL
 CREATE TABLE  Has
 (
 PartID int,
-CenterID int ,
+CenterID varchar(255) ,
 CONSTRAINT PK_PID PRIMARY KEY (PartID, CenterID),
 CONSTRAINT FK_PID FOREIGN KEY (PartID,centerId)
 REFERENCES Inventory(PartID,centerId) ON DELETE CASCADE
@@ -199,27 +199,27 @@ REFERENCES Inventory(PartID,centerId) ON DELETE CASCADE
 CREATE TABLE GoesTo (
     LicensePlateID varchar(255),
     CustID int,
-     CenterID int,    
+     CenterID varchar(255),
     CONSTRAINT PK_GOESTO PRIMARY KEY (LicensePlateID, CustID,  CenterID),
    CONSTRAINT FK_GOESTO_LicensePlateID FOREIGN KEY (LicensePlateID) REFERENCES Cars(LicensePlateID)
     ON DELETE CASCADE,
   CONSTRAINT FK_GOESTO_CustID  FOREIGN KEY (CustID) REFERENCES CUSTOMER(CustID)
-    ON DELETE CASCADE,     
+    ON DELETE CASCADE,
     CONSTRAINT FK_GOESTO_CenterID FOREIGN KEY (CenterID) REFERENCES  Service_Center ( CenterID)
-    ON DELETE CASCADE          
+    ON DELETE CASCADE
 );
 
 
-CREATE TABLE Lates (    
+CREATE TABLE Lates (
     NotificationID int,
     OrderID int,
     CONSTRAINT PK_Lates PRIMARY KEY (NotificationID , OrderID),
     CONSTRAINT FK_Lates_NotificationID FOREIGN KEY (NotificationID,OrderId) REFERENCES Notification(NotificationID , OrderID)
-    ON DELETE CASCADE          
+    ON DELETE CASCADE
 );
 
 
-CREATE TABLE Makes(    
+CREATE TABLE Makes(
 CenterID_sender int,
 CenterId_receiver int,
 OrderID int,
@@ -233,7 +233,7 @@ ON DELETE CASCADE,
 CONSTRAINT FK_Makes_OrderID  FOREIGN KEY (OrderID) REFERENCES OrderPart(OrderID)
 ON DELETE CASCADE,
 CONSTRAINT FK_Makes_DistID FOREIGN KEY (DistID,partId) REFERENCES Distributor(DistID,partId)
-ON DELETE CASCADE           
+ON DELETE CASCADE
 );
 
 CREATE TABLE Contains(
@@ -244,14 +244,14 @@ CREATE TABLE Contains(
     ON DELETE CASCADE
 );
 
-CREATE TABLE Provides ( 
-    CenterID int,
-    ServiceID int,  
+CREATE TABLE Provides (
+    CenterID varchar(255),
+    ServiceID int,
     CONSTRAINT PK_Provides PRIMARY KEY ( CenterID , ServiceID),
     CONSTRAINT FK_Provides_CenterID FOREIGN KEY ( CenterID) REFERENCES Service_Center( CenterID)
     ON DELETE CASCADE,
     CONSTRAINT FK_Provides_ServiceID FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID)
-    ON DELETE CASCADE           
+    ON DELETE CASCADE
 );
 
 
@@ -265,7 +265,7 @@ CREATE TABLE LinkedTo(
     CONSTRAINT FK_Contains_ServiceID FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID)
     ON DELETE CASCADE,
     CONSTRAINT FK_Contains_Appointmentno  FOREIGN KEY (Appointmentno) REFERENCES Appointment(Appointmentno)
-    ON DELETE CASCADE       
+    ON DELETE CASCADE
 );
 
 
@@ -273,12 +273,12 @@ CREATE TABLE LinkedTo(
 CREATE TABLE Uses(
     PartID int,
     ServiceID int,
-     CenterID int,
+     CenterID varchar(255),
     CONSTRAINT PK_Uses PRIMARY KEY (PartID, ServiceID, CenterID ),
    CONSTRAINT FK_Uses_ServiceID FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID)
     ON DELETE CASCADE,
     CONSTRAINT FK_Uses_PIDCID FOREIGN KEY (PartID, CenterID) REFERENCES Inventory(PartID, CenterID)
-    ON DELETE CASCADE      
+    ON DELETE CASCADE
 );
 
 
@@ -298,7 +298,7 @@ ON DELETE CASCADE
 CREATE TABLE Fulfills(
 OrderID int,
 PartID int,
-CenterID int,
+CenterID varchar(255),
 CONSTRAINT PK_Fulfill PRIMARY KEY (OrderID, PartID, CenterID),
 CONSTRAINT FK_Fulfill_OrderID FOREIGN KEY (OrderID) REFERENCES OrderPart (OrderID)
 ON DELETE CASCADE,
@@ -309,20 +309,10 @@ ON DELETE CASCADE
 
 CREATE TABLE WorksAt(
 EmpID int,
-CenterID int,
+CenterID varchar(255),
 CONSTRAINT PK_WorksAt PRIMARY KEY (EmpID, CenterID),
 CONSTRAINT FK_WorksAt_EmpID FOREIGN KEY (EmpID) REFERENCES Employee(EmpID)
 ON DELETE CASCADE,
 CONSTRAINT FK_WorksAt_Service_CenterID FOREIGN KEY (CenterID) REFERENCES Service_Center(CenterID)
 ON DELETE CASCADE
 );
-
-
-
-
-
-
-
-
-
-
