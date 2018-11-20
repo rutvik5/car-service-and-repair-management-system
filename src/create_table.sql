@@ -7,7 +7,7 @@ CREATE TABLE Service_Center (
 
 CREATE TABLE Inventory (
     CenterID varchar(255),
-	Car_model varchar(100),
+	  Car_model varchar(100),
     PartID int ,
     Part_Name varchar(255),
     Current_quantity varchar(255),
@@ -220,8 +220,8 @@ CREATE TABLE Lates (
 
 
 CREATE TABLE Makes(
-CenterID_sender int,
-CenterId_receiver int,
+CenterID_sender varchar(255),
+CenterId_receiver varchar(255),
 OrderID int,
 DistID int,
 partID int,
