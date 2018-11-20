@@ -28,17 +28,17 @@ CREATE TABLE Customer (
 );
 
 CREATE TABLE Employee (
-    EmpID int PRIMARY KEY,
+    EmpID varchar(255) PRIMARY KEY,
     Emp_Name varchar(255),
     Emp_email varchar(255) NOT NULL UNIQUE,
     Emp_address varchar(255),
-    Emp_Phone number(10),
-	Emp_start_date date
+    Emp_Phone varchar(10),
+	  Emp_start_date DATE
 );
 
 
 CREATE TABLE Monthly_Paid_Emp (
-    EmpID int,
+    EmpID varchar(255),
     Salary varchar(255),
     PRIMARY KEY (EmpID),
     CONSTRAINT FK_Monthly_Paid_Emp FOREIGN KEY (EmpID)
@@ -90,7 +90,7 @@ Basic_services_used varchar(1000)
 
 CREATE TABLE Mechanic_Emp
 (
-EmpID int PRIMARY KEY,
+EmpID varchar(255) PRIMARY KEY,
 Wages float,
 Hours_Worked float CHECK(Hours_Worked<=11*15),
 CONSTRAINT FK_EMPID FOREIGN KEY (EmpID)
@@ -161,9 +161,9 @@ REFERENCES OrderPart (OrderID) ON DELETE CASCADE
 
 CREATE TABLE Distributor
 (
-DistID int,
-Delivery_Window  int,
+DistID varchar(255),
 DistName varchar(50),
+Delivery_Window  int,
 PartID int,
 CONSTRAINT PK_Distributor PRIMARY KEY (DistID, PartID)
 );
@@ -223,7 +223,7 @@ CREATE TABLE Makes(
 CenterID_sender varchar(255),
 CenterId_receiver varchar(255),
 OrderID int,
-DistID int,
+DistID varchar(255),
 partID int,
 CONSTRAINT PK_Makes PRIMARY KEY ( CenterId_receiver,OrderID),
 CONSTRAINT FK_Makes_CenterID_send FOREIGN KEY ( CenterID_sender) REFERENCES Service_Center( CenterID)
@@ -308,7 +308,7 @@ ON DELETE CASCADE
 
 
 CREATE TABLE WorksAt(
-EmpID int,
+EmpID varchar(255),
 CenterID varchar(255),
 CONSTRAINT PK_WorksAt PRIMARY KEY (EmpID, CenterID),
 CONSTRAINT FK_WorksAt_EmpID FOREIGN KEY (EmpID) REFERENCES Employee(EmpID)
