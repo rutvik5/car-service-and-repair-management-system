@@ -35,9 +35,9 @@ public class Manager{
 	  
 	  int user_choice = t.nextInt();
 	  switch(user_choice){
-      case 1: emp.displayProfile();
+      case 1: emp.displayProfile(user_id);
       break;
-      case 2: emp.viewCustomerProfile();
+      case 2: emp.viewCustomerProfile(user_id);
       break;
       case 3: addEmployee();
       break;

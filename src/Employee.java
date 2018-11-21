@@ -1,13 +1,16 @@
+import java.util.Date;
 import java.util.Scanner;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 public class Employee{
-  Statement stmt, stmt1;
+  PreparedStatement stmt, stmt1;
   ResultSet rs, rs1;
   Connection connection;
-  public void viewCustomerProfile(){
+  public void viewCustomerProfile(String userID){
 
   }
 
@@ -19,9 +22,9 @@ public void displayProfile(String user_id){
 	  		"3. Go Back");
 	  int choice = t.nextInt();
 	  switch (choice) {
-	  case 1: viewProfile();
+	  case 1: viewProfile(user_id);
 	  break;
-	  case 2: updateProfile();
+	  case 2: updateProfile(user_id);
 	  break;
 	  case 3: redirectAccording();
 	  break;
@@ -36,7 +39,7 @@ private void redirectAccording() {
 	new Home().displayHomepage();
 }
 
-private void updateProfile() {
+private void updateProfile(String user_id) {
 	System.out.println("Please select an option from below");
 	System.out.println("1. Name\n" +
 			"2. Address\n" +
@@ -90,21 +93,25 @@ private void updateName() {
 
 }
 
-private void viewProfile() {
+private void viewProfile(String user_id) {
+	String empID="";
   try{
+	 
     connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
     stmt1 = connection.prepareStatement("SELECT EmpID FROM Employee WHERE Emp_email = ?");
     stmt1.setString(1, user_id);
 
-    rs1 = stmt1.executeQuery();
+    rs1 = stmt1.executeQuery(user_id);
 
     while(rs.next()){
-      String empID = rs1.getString("EmpID");
+      empID = rs1.getString("EmpID");
     }
 
-    stmt=connection.createStatement();
-    rs = stmt.prepareStatement("SELECT E.EmpID, E.Emp_Name, E.Emp_address, E.Emp_email, E.Emp_Phone, S.Center_Name, E.Role, E.Emp_Start_Date, M.Salary FROM Employee E, Monthly_Paid_Emp M, WorksAt W, Service_Center S WHERE W.CenterID = S.CenterID AND E.EmpID = M.EmpID AND E.EmpID = ?");
+    
+    stmt = connection.prepareStatement("SELECT E.EmpID, E.Emp_Name, E.Emp_address, E.Emp_email, E.Emp_Phone, S.Center_Name, E.Role, E.Emp_Start_Date, M.Salary FROM Employee E, Monthly_Paid_Emp M, WorksAt W, Service_Center S WHERE W.CenterID = S.CenterID AND E.EmpID = M.EmpID AND E.EmpID = ?");
     stmt.setString(1, empID);
+    rs = stmt.executeQuery();
+    
     while (rs.next()) {
       empID = rs.getString("EmpID");
       String Emp_Name = rs.getString("Emp_Name");
@@ -112,9 +119,9 @@ private void viewProfile() {
       String Emp_email = rs.getString("Emp_email");
       String Emp_Phone = rs.getString("Emp_Phone");
       String Center_Name = rs.getString("Center_Name");
-      int Role = rs.getInteger("Role");
+      int Role = rs.getInt("Role");
       Date Start_Date = rs.getDate("Start_Date");
-      int Salary = rs.getInteger("Emp_Name");
+      int Salary = rs.getInt("Emp_Name");
       System.out.println(empID + "   " + Emp_Name);
     }
 
@@ -131,7 +138,7 @@ private void viewProfile() {
 	  System.out.println("1. Go Back");
 	  int choice = t.nextInt();
 	  if (choice ==1 )
-		  displayProfile();
+		  displayProfile(user_id);
 	  t.close();
 
 }
