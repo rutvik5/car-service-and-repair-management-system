@@ -1,11 +1,19 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Customer{
-
+String userId;
   Receptionist receptionist= new Receptionist();
   Home home= new Home();
+  Connection connection;
+  PreparedStatement stmt=null;
+  ResultSet rs= null;
 
-  public void displayCustomerLanding(){
+  public void displayCustomerLanding(String user_id){
+	  userId =user_id;
     System.out.println("1.Profile\n2.Register Car\n3.Service\n4.Invoices\n5.Logout");
     Scanner t= new Scanner(System.in);
     int option= t.nextInt();
@@ -34,6 +42,7 @@ public class Customer{
 
     Scanner t= new Scanner(System.in);
     int option= t.nextInt();
+    
 
     switch(option){
       case 1:
@@ -43,20 +52,65 @@ public class Customer{
             updateProfile();
             break;
       case 3:
-            displayCustomerLanding();
+            displayCustomerLanding(userId);
             break;
     }
   }
   public void viewProfile(){
     System.out.println("DB:Display details of the customer ID, name, address, email, phone, list of cars w/ details");
 
-    System.out.println("Enter the following");
+    
+    try{
+        connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
 
+        stmt = connection.prepareStatement("select custid from Customer where cust_email = ?");
+        stmt.setString(1, userId);
+        rs = stmt.executeQuery();
+        int id=0;
+        while (rs.next()) {
+            id = rs.getInt(1);
+            }
+        stmt=connection.prepareStatement("select * from Customer where CustId = ?");
+        stmt.setInt(1, id);
+        rs = stmt.executeQuery();
+        while (rs.next()) {
+        System.out.println ("Id:"+rs.getInt(1));
+        System.out.println ("Name:"+rs.getString(2));
+        System.out.println ("Email:"+rs.getString(3));
+        System.out.println ("Address:"+rs.getString(4));
+        System.out.println ("Phone:"+rs.getInt(5));
+        }
+        rs.close();
+        
+        String query1= "SELECT GoesTo.CustID, Cars.LicensePlateID, Cars.Car_Type,Cars.Date_Purchase, Cars.Last_Mileage, Cars.Type_Recent_Service, Cars.Date_Recent_service"
+        +" FROM Orders"
+        +" RIGHT JOIN Cars ON GoesTo.LicensePlateID = Cars.LicensePlateID"
+        +" where GoesTo.CustID = ?";
+        stmt=connection.prepareStatement(query1);
+        stmt.setInt(1, id);
+        rs = stmt.executeQuery();
+        while (rs.next()) {
+        	System.out.println("Car details:-");
+            System.out.println ("License Plate Id:"+rs.getString(2));
+            System.out.println ("Car-Type:"+rs.getString(3));
+            System.out.println ("Date Purchased:"+rs.getString(4));
+            System.out.println ("Last milage:"+rs.getInt(5));
+            System.out.println ("Recent Service Type:"+rs.getString(6));
+            System.out.println ("Recent Service Date"+rs.getString(7));
+            }
+        
+        DBUtility.close(connection);
+
+      }catch(SQLException e){
+        System.out.println("Connection Failed! Check output console");
+        e.printStackTrace();
+        DBUtility.close(connection);
+        
+      }
     System.out.println("1. Go Back");
 
     Scanner t= new Scanner(System.in);
     int option= t.nextInt();
-
     switch(option){
       case 1:
             profile();
@@ -148,9 +202,9 @@ public class Customer{
             String carType= make + model + year;
             System.out.println("Car Successfully Added");
             //save the user info to database
-            displayCustomerLanding();
+            displayCustomerLanding(userId);
 
-      case 2: displayCustomerLanding();// do not add anything to db
+      case 2: displayCustomerLanding(userId);// do not add anything to db
 
     }
 
@@ -174,7 +228,7 @@ public class Customer{
             rescheduleService();
             break;
       case 4:
-            displayCustomerLanding();
+            displayCustomerLanding(userId);
     }
   }
 
@@ -218,7 +272,7 @@ public class Customer{
       break;
       case 2: scheduleRepair();
       break;
-      case 3: displayCustomerLanding();
+      case 3: displayCustomerLanding(userId);
       break;
 
     }
@@ -316,7 +370,7 @@ public class Customer{
                                 +"one day after the current service date");
               pickService();
 
-      case 2: displayCustomerLanding();
+      case 2: displayCustomerLanding(userId);
       default: System.out.println("Enter a valid choice");
     }
   }
@@ -334,9 +388,9 @@ public class Customer{
 
       case 1:
               System.out.println("Ask the user to pick one fo the dates shown and add to db");
-              displayCustomerLanding();
+              displayCustomerLanding(userId);
 
-      case 2: displayCustomerLanding();
+      case 2: displayCustomerLanding(userId);
       default: System.out.println("Enter a valid choice");
     }
 
@@ -354,7 +408,7 @@ public class Customer{
     System.out.println("1.View Invoice Details\n2. Go Back");
     int user_choice= t.nextInt();
     if (user_choice == 1) viewInvoiceDetails();
-    if (user_choice == 2) displayCustomerLanding();
+    if (user_choice == 2) displayCustomerLanding(userId);
   }
 
   public void viewInvoiceDetails(){
