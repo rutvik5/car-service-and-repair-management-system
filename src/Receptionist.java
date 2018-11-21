@@ -15,7 +15,7 @@ class Receptionist{
     int user_choice = t.nextInt();
 
     switch(user_choice){
-      case 1: employee.displayProfile();
+      case 1: employee.displayProfile(user_id);
       case 2: employee.viewCustomerProfile();
       case 3: registerCar();
       case 4: serviceHistory();

@@ -1,11 +1,17 @@
 import java.util.Scanner;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.Connection;
 
 public class Employee{
+  Statement stmt, stmt1;
+  ResultSet rs, rs1;
+  Connection connection;
   public void viewCustomerProfile(){
 
   }
 
-public void displayProfile(){
+public void displayProfile(String user_id){
 	Scanner t = new Scanner(System.in);
 	  System.out.println("Please select one of the following");
 	  System.out.println("1. View Profile\n" +
@@ -20,7 +26,7 @@ public void displayProfile(){
 	  case 3: redirectAccording();
 	  break;
 	  default: System.out.println("Please enter a valid choice");
-	  displayProfile();
+	  displayProfile(user_id);
 	  }
 	  t.close();
   }
@@ -53,7 +59,7 @@ private void updateProfile() {
 	  break;
 	  case 5: updatePassword();
 	  break;
-	  case 6: displayProfile();
+	  case 6: displayProfile(user_id);
 	  break;
 	  }
 	} while (choice !=6);
@@ -87,12 +93,20 @@ private void updateName() {
 private void viewProfile() {
   try{
     connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
+    stmt1 = connection.prepareStatement("SELECT EmpID FROM Employee WHERE Emp_email = ?");
+    stmt1.setString(1, user_id);
+
+    rs1 = stmt1.executeQuery();
+
+    while(rs.next()){
+      String empID = rs1.getString("EmpID");
+    }
 
     stmt=connection.createStatement();
-    rs = stmt.executeQuery("SELECT E.EmpID, E.Emp_Name, E.Emp_address, E.Emp_email, E.Emp_Phone, S.Center_Name, E.Role, E.Start_Date, M.Salary FROM Employee E, Monthly_Paid_Emp M, WorksAt W, Service_Center S WHERE W.CenterID = S.CenterID AND E.EmpID = M.EmpID");
-
+    rs = stmt.prepareStatement("SELECT E.EmpID, E.Emp_Name, E.Emp_address, E.Emp_email, E.Emp_Phone, S.Center_Name, E.Role, E.Emp_Start_Date, M.Salary FROM Employee E, Monthly_Paid_Emp M, WorksAt W, Service_Center S WHERE W.CenterID = S.CenterID AND E.EmpID = M.EmpID AND E.EmpID = ?");
+    stmt.setString(1, empID);
     while (rs.next()) {
-      String empID = rs.getString("EmpID");
+      empID = rs.getString("EmpID");
       String Emp_Name = rs.getString("Emp_Name");
       String Emp_address = rs.getString("Emp_address");
       String Emp_email = rs.getString("Emp_email");
@@ -101,7 +115,7 @@ private void viewProfile() {
       int Role = rs.getInteger("Role");
       Date Start_Date = rs.getDate("Start_Date");
       int Salary = rs.getInteger("Emp_Name");
-      System.out.println(s + "   " + n);
+      System.out.println(empID + "   " + Emp_Name);
     }
 
     DBUtility.close(connection);
