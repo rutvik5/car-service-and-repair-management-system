@@ -82,10 +82,10 @@ String userId;
         }
         rs.close();
         
-        String query1= "SELECT GoesTo.CustID, Cars.LicensePlateID, Cars.Car_Type,Cars.Date_Purchase, Cars.Last_Mileage, Cars.Type_Recent_Service, Cars.Date_Recent_service"
-        +" FROM Orders"
-        +" RIGHT JOIN Cars ON GoesTo.LicensePlateID = Cars.LicensePlateID"
-        +" where GoesTo.CustID = ?";
+        String query1= "SELECT GoesTo.CustID, Cars.LicensePlateID, Cars.Car_Type,Cars.Date_Purchase, Cars.Last_Mileage, Cars.Type_Recent_Service, Cars.Date_Recent_service" + 
+        		" FROM GoesTo" + 
+        		" JOIN Cars ON GoesTo.LicensePlateID = Cars.LicensePlateID" + 
+        		" and GoesTo.CustID = ?";
         stmt=connection.prepareStatement(query1);
         stmt.setInt(1, id);
         rs = stmt.executeQuery();

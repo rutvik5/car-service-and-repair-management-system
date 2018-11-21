@@ -6,11 +6,11 @@ import java.util.Scanner;
 
 class Login{
 	Connection connection;
+	PreparedStatement stmt=null;
+    ResultSet rs= null;
   public void displayLogin(){
     Scanner t= new Scanner(System.in);
     Home home= new Home();
-    PreparedStatement stmt=null;
-    ResultSet rs= null;
     String s="";
     int r=0;
     System.out.println("Please enter the following");
@@ -24,13 +24,14 @@ class Login{
     try{
         connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
 
-        stmt=connection.prepareStatement("select PASSWORD,Role from LOGIN where LOGINID = ?");
+        stmt=connection.prepareStatement("SELECT PASSWORD,ROLE FROM LOGIN WHERE LOGINID=?");
         stmt.setString(1, user_id);
         rs = stmt.executeQuery();
         while (rs.next()) {
           s = rs.getString(1).trim();
           r = Integer.parseInt(rs.getString("Role").trim());
         }
+        
         rs.close();
         DBUtility.close(connection);
 
@@ -45,7 +46,7 @@ class Login{
     	enterPortal(home,r,user_id);
     } else {
     	System.out.println("Invalid Username/password");
-    	displayLogin();
+    	home.displayHomepage();
     }
 
     
