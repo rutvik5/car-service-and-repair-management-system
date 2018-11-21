@@ -1,3 +1,7 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Manager{
@@ -5,9 +9,13 @@ public class Manager{
 	
 	  Employee emp=new Employee();
 	  Home home = new Home();
-	  
-  public void displayManagerLanding(){
+	  Connection connection;
+		PreparedStatement stmt=null;
+	    ResultSet rs= null;
+	  String userId;
+  public void displayManagerLanding(String user_id){
 	  Scanner t = new Scanner(System.in);
+	  userId =user_id;
 	  System.out.println("Please select one of the following");
 	  System.out.println("1. Profile\n" + 
 	  		"2. View Customer\n" + 
@@ -61,10 +69,70 @@ public class Manager{
 
 private void addEmployee () {
 	  Scanner t = new Scanner(System.in);
+	  
+	  System.out.println("Please enter the following");
+
+	    System.out.println("Add Role -1,2,3");
+	    int role= t.nextInt();
+
+	    System.out.println("Name:\t");
+	    t.hasNextLine();
+	    String name= t.nextLine();
+	    
+	    System.out.println("email:\t");
+	    
+	    String email= t.nextLine();
+
+	    System.out.println("Address:\t");
+	    String address= t.nextLine();
+
+	    System.out.println("Phone Number:\t");
+	    String phone= t.nextLine();
+	    
+	    System.out.println("Start Date:\t");
+	    String start_date= t.nextLine();
+	    
+	    System.out.println("Password:\t");
+	    String password= t.nextLine();
+	    
+	    int newId=0;
+	    try{
+		      connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
+
+		      stmt=connection.prepareStatement("select max(empid) from employee");
+		      rs = stmt.executeQuery();
+		      while (rs.next()) {
+		        newId = rs.getInt(1)+1;
+		      }
+		      rs.close();
+		      stmt = connection.prepareStatement("insert into Employee values(?,?,?,?,?,?,?)");
+		      stmt.setInt(1, newId);
+		      stmt.setInt(2, role);
+		      stmt.setString(3, name);
+		      stmt.setString(4, email);
+		      stmt.setString(5, address);
+		      stmt.setString(6, phone);
+		      stmt.setString(7, start_date);
+		      stmt.executeUpdate();
+		      
+		      stmt = connection.prepareStatement("insert into login values(?,?,?)");
+		      stmt.setString(1, String.valueOf(newId));
+		      stmt.setString(2, password);
+		      stmt.setInt(3, role);
+		      stmt.executeUpdate();
+		      DBUtility.close(connection);
+
+		    }catch(SQLException e){
+		      System.out.println("Connection Failed! Check output console");
+		      e.printStackTrace();
+		      DBUtility.close(connection);
+		      
+		    }
+	    
 	  System.out.println("1. Go Back");
 	  int choice = t.nextInt();
 	  if (choice ==1 )
-	  displayManagerLanding();
+	  displayManagerLanding(userId);
 	  t.close();
   }
   
@@ -73,7 +141,7 @@ private void addEmployee () {
 	  System.out.println("1. Go Back");
 	  int choice = t.nextInt();
 	  if (choice ==1 )
-	  displayManagerLanding();
+	  displayManagerLanding(userId);
 	  t.close();
   }
   
@@ -82,7 +150,7 @@ private void addEmployee () {
 	  System.out.println("1. Go Back");
 	  int choice = t.nextInt();
 	  if (choice ==1 )
-	  displayManagerLanding();
+	  displayManagerLanding(userId);
 	  t.close();
   }
   
@@ -97,7 +165,7 @@ private void addEmployee () {
 	  break;
 	  case 2: newOrder();
 	  break;
-	  case 3: displayManagerLanding();
+	  case 3: displayManagerLanding(userId);
 	  break;
 	  default: System.out.println("Please enter a valid choice");
 	  }
@@ -149,7 +217,7 @@ private void addEmployee () {
 	  switch (choice) {
 	  case 1: getOrderDetails();
 	  break;
-	  case 2: displayManagerLanding();
+	  case 2: displayManagerLanding(userId);
 	  break;
 	  default: System.out.println("Please enter a valid choice");
 	  }
@@ -173,7 +241,7 @@ private void addNewCarModel() {
 	  switch (choice) {
 	  case 1: addCarModel();
 	  break;
-	  case 2: displayManagerLanding();
+	  case 2: displayManagerLanding(userId);
 	  break;
 	  default: System.out.println("Please enter a valid choice");
 	  }
@@ -196,7 +264,7 @@ private void getCarServiceDetails() {
 	  System.out.println("1. Go Back");
 	  int choice = t.nextInt();
 	  if (choice ==1 )
-		  displayManagerLanding();
+		  displayManagerLanding(userId);
 	  t.close();
 	
 }
@@ -206,7 +274,7 @@ private void getServiceHistory() {
 	  System.out.println("1. Go Back");
 	  int choice = t.nextInt();
 	  if (choice ==1 )
-		  displayManagerLanding();
+		  displayManagerLanding(userId);
 	  t.close();
 }
 
@@ -215,7 +283,7 @@ private void getInvoices() {
 	  System.out.println("1. Go Back");
 	  int choice = t.nextInt();
 	  if (choice ==1 )
-		  displayManagerLanding();
+		  displayManagerLanding(userId);
 	  t.close();
 }
 

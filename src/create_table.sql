@@ -24,16 +24,17 @@ CREATE TABLE Customer (
     Cust_Name varchar(255),
     Cust_email varchar(255) NOT NULL UNIQUE,
     Cust_address varchar(255),
-    Cust_Phone number(10)
+    Cust_Phone varchar(20)
 );
 
 CREATE TABLE Employee (
     EmpID int PRIMARY KEY,
+	Role int,
     Emp_Name varchar(255),
     Emp_email varchar(255) NOT NULL UNIQUE,
     Emp_address varchar(255),
-    Emp_Phone number(10),
-	Emp_start_date date
+    Emp_Phone varchar(20),
+	Emp_start_date varchar(50)
 );
 
 
@@ -88,11 +89,12 @@ Basic_services_used varchar(1000)
 
 
 
+
 CREATE TABLE Mechanic_Emp
 (
 EmpID int PRIMARY KEY,
-Wages float,
-Hours_Worked float CHECK(Hours_Worked<=11*15),
+Wages int,
+Hours_Worked int CHECK(Hours_Worked<=11*15),
 CONSTRAINT FK_EMPID FOREIGN KEY (EmpID)
 REFERENCES Employee(EmpID) ON  DELETE CASCADE
 );
@@ -102,10 +104,10 @@ CREATE TABLE Cars
 (
 LicensePlateID  varchar(255) PRIMARY KEY,
 Car_Type varchar(255),
-Date_Purchase DATE,
+Date_Purchase Varchar(50),
 Last_Mileage int,
 Type_Recent_Service varchar(255),
-Date_Recent_Service DATE
+Date_Recent_Service Varchar(50)
 );
 
 
@@ -137,13 +139,12 @@ REFERENCES Service(ServiceID) ON DELETE CASCADE
 CREATE TABLE OrderPart(
 CenterID varchar(255),
 OrderID int PRIMARY KEY,
-Order_date DATE,
+Order_date varchar(255),
 Part_ID  int NOT NULL,
 quantity int,
 Status varchar(255),
-Expected_date date,
-Actual_date date,
-CHECK(quantity>25),
+Expected_date varchar(255),
+Actual_date varchar(255),
 CONSTRAINT FK_PtID FOREIGN KEY (Part_ID,CenterID)
 REFERENCES Inventory(PartId,CenterId) ON DELETE CASCADE
 );
@@ -161,7 +162,7 @@ REFERENCES OrderPart (OrderID) ON DELETE CASCADE
 
 CREATE TABLE Distributor
 (
-DistID int,
+DistID varchar(50),
 Delivery_Window  int,
 DistName varchar(50),
 PartID int,
@@ -171,13 +172,14 @@ CONSTRAINT PK_Distributor PRIMARY KEY (DistID, PartID)
 CREATE TABLE Appointment
 (
 AppointmentNo int PRIMARY KEY,
-App_Date DATE,
-start_time varchar(255)
+App_Date varchar(255),
+start_slot int,
+end_slot int
 );
 
 CREATE TABLE Login
 (
-LoginID int PRIMARY KEY,
+LoginID varchar(255) PRIMARY KEY,
 Password  varchar(255) NOT NULL,
 Role varchar(255) NOT NULL
 );
@@ -223,7 +225,7 @@ CREATE TABLE Makes(
 CenterID_sender varchar(255),
 CenterId_receiver varchar(255),
 OrderID int,
-DistID int,
+DistID varchar(50),
 partID int,
 CONSTRAINT PK_Makes PRIMARY KEY ( CenterId_receiver,OrderID),
 CONSTRAINT FK_Makes_CenterID_send FOREIGN KEY ( CenterID_sender) REFERENCES Service_Center( CenterID)

@@ -1,8 +1,9 @@
 import java.util.Scanner;
 
 class Receptionist{
-    public void displayReceptionistLanding(){
-
+	String UserId;
+    public void displayReceptionistLanding(String user_id){
+    UserId = user_id;
     Scanner t= new Scanner(System.in);
     Home home= new Home();
     Employee employee= new Employee();
@@ -74,9 +75,9 @@ class Receptionist{
       case 1:
             System.out.println("Car Successfully Added");
             //save the user info to database
-            displayReceptionistLanding();
+            displayReceptionistLanding(UserId);
 
-      case 2: displayReceptionistLanding();// do not add anything to db
+      case 2: displayReceptionistLanding(UserId);// do not add anything to db
       default: System.out.println("Enter a valid choice");
     }
   }
@@ -96,7 +97,7 @@ class Receptionist{
     service_end-date/time(expected or actual), service_status(Pending/Ongoing/Complete) */
 
     System.out.println("Go Back? Enter 1");
-    displayReceptionistLanding();
+    displayReceptionistLanding(UserId);
   }
 
   public void scheduleService(){
@@ -131,7 +132,7 @@ class Receptionist{
 break;
       case 2: scheduleRepair();
       break;
-      case 3: displayReceptionistLanding();
+      case 3: displayReceptionistLanding(UserId);
       break;
       default: System.out.println("Enter a valid choice");
 
@@ -235,7 +236,7 @@ break;
                                   +"one day after the current service date");
                 pickService();
 
-        case 2: displayReceptionistLanding();
+        case 2: displayReceptionistLanding(UserId);
         default: System.out.println("Enter a valid choice");
       }
     }
@@ -253,9 +254,9 @@ break;
 
         case 1:
                 System.out.println("Ask the user to pick one fo the dates shown and add to db");
-                displayReceptionistLanding();
+                displayReceptionistLanding(UserId);
 
-        case 2: displayReceptionistLanding();
+        case 2: displayReceptionistLanding(UserId);
         default: System.out.println("Enter a valid choice");
       }
 
@@ -276,7 +277,7 @@ break;
       System.out.println("Please select the following");
       System.out.println("1.Go Back");
       int user_choice= t.nextInt();
-      if (user_choice == 1) displayReceptionistLanding();
+      if (user_choice == 1) displayReceptionistLanding(UserId);
     }
 
     public void updateInventory(){
@@ -290,7 +291,7 @@ break;
       System.out.println("Please select the following");
       System.out.println("1.Go Back");
       int user_choice= t.nextInt();
-      if (user_choice == 1) displayReceptionistLanding();
+      if (user_choice == 1) displayReceptionistLanding(UserId);
     }
 
     public void recordDeliverables(){
@@ -315,7 +316,7 @@ break;
                                   +"  a notification to the manager");
 
 
-        case 2: displayReceptionistLanding();
+        case 2: displayReceptionistLanding(UserId);
         default: System.out.println("Enter a valid choice");
       }
 
