@@ -2,6 +2,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Customer{
@@ -16,6 +23,15 @@ String userId;
  int current_mileage=0;
  String mechanic_name="";
  String serviceType="";
+ String carType="";
+ String basicServiceArray[];
+ String centerID;
+ int maxWindow=0;
+ String appDate;
+ int start_slot=0;
+ int end_slot=0;
+ float totalHours=0;
+ HashMap<Integer,Integer> partMap = new HashMap<Integer,Integer>();
   public void displayCustomerLanding(String user_id){
 	  userId =user_id;
     System.out.println("1.Profile\n2.Register Car\n3.Service\n4.Invoices\n5.Logout");
@@ -85,7 +101,7 @@ String userId;
         System.out.println ("Phone:"+rs.getInt(5));
         System.out.println("");
         }
-        rs.close();
+        //rs.close();
         
         String query1= "SELECT GoesTo.CustID, Cars.LicensePlateID, Cars.Car_Type,Cars.Date_Purchase, Cars.Last_Mileage, Cars.Type_Recent_Service, Cars.Date_Recent_service" + 
         		" FROM GoesTo" + 
@@ -139,7 +155,7 @@ String userId;
         while (rs.next()) {
             id = rs.getInt(1);
             }
-        rs.close();
+        //rs.close();
       }catch(SQLException e){
         System.out.println("Connection Failed! Check output console");
         e.printStackTrace();
@@ -243,7 +259,7 @@ String userId;
         while (rs.next()) {
             custid = rs.getInt(1);
             }
-        rs.close();
+        //rs.close();
         DBUtility.close(connection);
 
       }catch(SQLException e){
@@ -263,6 +279,7 @@ String userId;
             break;
       case 4:
             displayCustomerLanding(userId);
+            break;
     }
   }
 
@@ -324,72 +341,230 @@ String userId;
     int user_choice= t.nextInt();
     switch (user_choice) {
       case 1: findServiceDate();
+      break;
       case 2: scheduleService();
+      break;
       default: System.out.println("Enter a valid choice");
+      break;
     }
   }
   public void findServiceDate(){
     Scanner t= new Scanner(System.in);
     try{
-        connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
+    	connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
         getServiceType();
         getBasicID();
-        
         DBUtility.close(connection);
 
       }catch(SQLException e){
         System.out.println("Connection Failed! Check output console");
         e.printStackTrace();
       }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     System.out.println("Please select one of the following");
     System.out.println("1. Schedule on Date" + "\n" + " 2. Go Back");
     int user_choice= t.nextInt();
     switch (user_choice) {
 
-      case 1: 
+      case 1: postAppointmentConfirmtion();
               System.out.println("Service appointment successfully saved");
               scheduleService();
+              break;
 
       case 2: scheduleMaintenance(license_plate,current_mileage,mechanic_name);
+      break;
       default: System.out.println("Enter a valid choice");
+      break;
     }
   }
 
+private void postAppointmentConfirmtion() {
+	UpdateAppointment();  // update of appointment table && update linked to table
+	UpdateCustomerRequest(); //update request table
+	DecreaseSender(); // reduce items from inventory
+}
+
 private void getBasicID() {
-	
+	try{
+        stmt = connection.prepareStatement("select basic_services_used from basic_service_mapping where car_model = ? and service_type=?");
+        stmt.setString(1, carType);
+        stmt.setString(2, serviceType);
+        rs = stmt.executeQuery();
+        
+        while (rs.next()) {
+        	basicServiceArray =rs.getString(1).split(",");
+            }
+        //rs.close();
+        for (int i=0;i<basicServiceArray.length;i++) {
+        	int currentBaiscServiceid = Integer.parseInt(basicServiceArray[i]);
+        	stmt = connection.prepareStatement("select part_required,part_quantity_required from partrequired_car_model where basicserviceid =? and TRIM(car_model) =?");
+        	stmt.setInt(1, currentBaiscServiceid);
+        	stmt.setString(2, carType);
+        	rs= stmt.executeQuery();
+        	
+        	while (rs.next()) {
+        		if (!partMap.containsKey(rs.getInt(1))) {
+        			partMap.put(rs.getInt(1), rs.getInt(2));
+        		} else {
+        			partMap.put(rs.getInt(1), partMap.get(rs.getInt(1))+rs.getInt(2));
+        		}
+        	}
+        	//rs.close();
+        }
+        
+        for (int i=0;i<basicServiceArray.length;i++) {
+        	int currentBaiscServiceid = Integer.parseInt(basicServiceArray[i]);
+        	stmt = connection.prepareStatement("select hours_required from basicservice where basicserviceid=?");
+        	stmt.setInt(1, currentBaiscServiceid);
+        	rs = stmt.executeQuery();
+        	if (rs.next()) {
+        		totalHours = totalHours+rs.getFloat(1);
+        	}
+        }
+        
+        stmt = connection.prepareStatement("select centerid from goesto where custid=?");
+        stmt.setInt(1, custid);
+        rs = stmt.executeQuery();
+        while (rs.next()) {
+        	centerID=rs.getString(1);
+        }
+        //rs.close();
+
+        for (Map.Entry m: partMap.entrySet()) {
+        	
+        	int window=0;
+        	stmt = connection.prepareStatement("select current_quantity from inventory where centerid=? and partid=? and car_model=?");
+        	stmt.setString(1, centerID);
+        	stmt.setInt(2, (int)m.getKey());
+        	stmt.setString(3, carType.split(" ")[0]);
+        	rs = stmt.executeQuery();
+        	if (rs.next()) {
+        		if (rs.getInt(1)<(int)m.getValue()) {
+        			//rs.close();
+        			stmt = connection.prepareStatement("select current_quantity,threshold_min from inventory where centerid!=? and partid=? and car_model=? and current_quantity-?>threshold_min");
+        			stmt.setString(1, centerID);
+                	stmt.setInt(2, (int)m.getKey());
+                	stmt.setString(3, carType.split(" ")[0]);
+                	stmt.setInt(4,(int)m.getValue());
+                	rs = stmt.executeQuery();
+                	if(rs.next()) {
+                		window=1;
+                	} else {
+                		stmt = connection.prepareStatement("select min(delivery_window)from distributor where partid=?");
+                		stmt.setInt(1, (int)m.getKey());
+                		rs = stmt.executeQuery();
+                		if (rs.next()) {
+                			window =rs.getInt(1);
+                		}
+                	}
+                	if (window> maxWindow) {
+                		maxWindow=window;
+                	}
+        		}
+        	} 
+        }
+        
+    	getAppointmentDate(); // appointment date is chosen by customer
+      }catch(Exception e){
+        System.out.println("Connection Failed! Check output console");
+        e.printStackTrace();
+      }
+}
+
+private void DecreaseSender() {
+	// TODO Auto-generated method stub
 	
 }
 
+private void getAppointmentDate() throws ParseException, SQLException {
+	SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+	    String date1 ="";
+	    String date2="";
+		Date current = new Date();
+		String currentDate =df.format(current);
+		current = df.parse(currentDate);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(current);
+		cal.add(Calendar.DATE, maxWindow);
+		while(true) {
+		
+		date1=df.format(cal.getTime());
+			stmt = connection.prepareStatement("select max(end_slot) from appointment where TRIM(app_Date)=? and TRIM(mechanic)=?");
+			stmt.setString(1, date1);
+			stmt.setString(2, mechanic_name);
+			rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				end_slot =rs.getInt(1);
+				if (end_slot==0) {
+					start_slot=1;
+					end_slot=(int)Math.ceil(totalHours*2);
+					break;
+				} else {
+					if(end_slot+(int)Math.ceil(totalHours*2)+1<22) {
+						start_slot = end_slot+1;
+						end_slot = end_slot+(int)Math.ceil(totalHours*2);
+						break;
+					} else {
+						cal.add(Calendar.DATE,1);
+					}
+				}
+			} 
+		}
+		System.out.println("Choose one of the below available dates: 1 or 2");
+		System.out.println("Date-"+ date1 +" Slot-"+convertSlotToTime(start_slot)+"-"+convertSlotToTime(end_slot));
+		cal.add(Calendar.DATE,1);
+		date2=df.format(cal.getTime());
+		System.out.println("Date-"+ date2 +" Slot-"+convertSlotToTime(start_slot)+"-"+convertSlotToTime(end_slot));
+	
+		Scanner s = new Scanner(System.in);
+		int choice = s.nextInt();
+		s.nextLine();
+		if (choice==1) {
+			appDate=date1; 
+		} else {
+			appDate=date2;
+		}
+}
+
+private void UpdateCustomerRequest() {
+	// TODO Auto-generated method stub
+	
+}
+
+private void UpdateAppointment() {
+	// TODO Auto-generated method stub
+	
+}
+
+private String convertSlotToTime(int slot) {
+	 String myTime = "08:00";
+	 SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+	 Date d = null;
+	try {
+		d = df.parse(myTime);
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} 
+	 Calendar cal = Calendar.getInstance();
+	 cal.setTime(d);
+	 cal.add(Calendar.MINUTE, (slot-1)*30);
+	 String newTime = df.format(cal.getTime());
+	 return newTime;
+}
+
 private void getServiceType() throws SQLException {
-	String carType="";
+	
 	int mileage=0;
-	stmt = connection.prepareStatement("select type_recent_service from Cars where licenseplateid = ?");
+	stmt = connection.prepareStatement("select type_recent_service,car_type,last_mileage from Cars where licenseplateid = ?");
 	stmt.setString(1, license_plate);
 	rs = stmt.executeQuery();
-	
-	if (rs.next()) {
+	if(rs.next()) {
+		carType=rs.getString(2).split(",")[0].trim()+ " "+rs.getString(2).split(",")[1].trim();
+		mileage=rs.getInt(3);
 		if (rs.getString(1)==null) {
-			rs.close();
-			stmt = connection.prepareStatement("select last_mileage,car_type from Cars where licenseplateid = ?");
-	    	stmt.setString(1, license_plate);
-	        rs = stmt.executeQuery();
-	        if (rs.next()) {
-	        	mileage=rs.getInt(1);
-	        	carType=rs.getString(2).split(",")[0].trim()+ " "+rs.getString(2).split(",")[1].trim();
-	        } 
-	        rs.close();
+			//rs.close();
 	        stmt = connection.prepareStatement("select miles from basic_service_mapping where car_model = ?");
 	        stmt.setString(1, carType);
 	        rs = stmt.executeQuery();
@@ -399,7 +574,7 @@ private void getServiceType() throws SQLException {
 	        	m[i]=rs.getInt(1);
 	        	i++;
 	        }
-	        rs.close();
+	        //rs.close();
 	        if (mileage<m[0]) {
 	        	serviceType="A";
 	        } else if (mileage>m[2]) {
@@ -407,10 +582,10 @@ private void getServiceType() throws SQLException {
 	        } else {
 	        	serviceType="B";
 	        }
-	        stmt = connection.prepareStatement("Update Cars set type_recent_service = ? where licenseplateid = ?");
-	        stmt.setString(1, serviceType);
-	        stmt.setString(2, license_plate);
-	        stmt.executeQuery();
+//	        stmt = connection.prepareStatement("Update Cars set type_recent_service = ? where licenseplateid = ?");
+//	        stmt.setString(1, serviceType);
+//	        stmt.setString(2, license_plate);
+//	        stmt.executeQuery();
 		} else if (rs.getString(1).trim().equalsIgnoreCase("A")){
 			serviceType="B";
 		} else if (rs.getString(1).trim().equalsIgnoreCase("B")){
@@ -419,7 +594,7 @@ private void getServiceType() throws SQLException {
 			serviceType="A";
 		}
 	    } 
-	rs.close();
+	//rs.close();
 }
 
   public void scheduleRepair(){
@@ -432,17 +607,19 @@ private void getServiceType() throws SQLException {
     int user_choice= t.nextInt();
     switch (user_choice) {
       //based on the repair display the report, 2 identifed service dates, mechanic_name
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-      case 7:
-      case 8: scheduleService();
+      case 1:break;
+      case 2:break;
+      case 3:break;
+      case 4:break;
+      case 5:break;
+      case 6:break;
+      case 7:break;
+      case 8: 
+    	  scheduleService();
+    	  break;
       default: System.out.println("Enter a valid choice");
-
       selectRepairDate();
+      break;
     }
   }
 
@@ -503,9 +680,11 @@ private void getServiceType() throws SQLException {
       case 1:
               System.out.println("Ask the user to pick one fo the dates shown and add to db");
               displayCustomerLanding(userId);
-
+break;
       case 2: displayCustomerLanding(userId);
+      break;
       default: System.out.println("Enter a valid choice");
+      break;
     }
 
   }
