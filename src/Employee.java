@@ -242,8 +242,8 @@ String newName="";
 	      System.out.println("Connection Failed! Check output console");
 	      e.printStackTrace();
 	      DBUtility.close(connection);
-	      
-	    }}
+	    }
+}
 
 
 private void viewProfile(String user_id) {
