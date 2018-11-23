@@ -2,6 +2,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 class Receptionist{
@@ -9,31 +13,42 @@ class Receptionist{
 	Connection connection;
 	PreparedStatement stmt;
 	ResultSet rs;
+	
     public void displayReceptionistLanding(String user_id){
     UserId = user_id;
     Scanner t= new Scanner(System.in);
     Home home= new Home();
     Employee employee= new Employee();
 
-    System.out.println("Please select one of the following");
-    System.out.println("1. Profile\n" + " 2. View Customer Profile" + "\n" + "3. Register Car" + "\n" + "4. Service History" + "\n" + "5. Schedule Service" + "\n" + "6. Reschedule Service" + "\n" + "7. Invoices" + "\n"
+    System.out.println("Please select one of the following\n");
+    System.out.println("1. Profile\n" + "2. View Customer Profile" + "\n" + "3. Register Car" + "\n" + "4. Service History" + "\n" + "5. Schedule Service" + "\n" + "6. Reschedule Service" + "\n" + "7. Invoices" + "\n"
                         +"8. Daily Task Update Inventory" + "\n" + "9. Daily Task- Record Deliveries" + "\n" + "10. Logout");
 
     int user_choice = t.nextInt();
 
     switch(user_choice){
       case 1: employee.displayProfile(user_id);
+      		  break;
       case 2: employee.viewCustomerProfile();
+      break;
       case 3: registerCar();
+      break;
       case 4: serviceHistory();
+      break;
       case 5: scheduleService();
+      break;
       case 6: rescheduleService();
+      break;
       case 7: invoices();
+      break;
       case 8: updateInventory();
+      break;
       case 9: recordDeliverables();
+      break;
       case 10: home.displayHomepage();
+      break;
       default: System.out.println("Please enter a valid choice");
-
+      break;
     }
   }
 
@@ -153,9 +168,11 @@ class Receptionist{
     	    }
             System.out.println("Car Successfully Added");
             displayReceptionistLanding(UserId);
-
-      case 2: displayReceptionistLanding(UserId);// do not add anything to db
+            break;
+      case 2: displayReceptionistLanding(UserId);
+              break;
       default: System.out.println("Enter a valid choice");
+      break;
     }
   }
 
@@ -178,6 +195,7 @@ class Receptionist{
   }
 
   public void scheduleService(){
+
     Scanner t= new Scanner(System.in);
 
     System.out.println("Please enter the following details");
@@ -359,11 +377,116 @@ break;
 
     public void updateInventory(){
       Scanner t= new Scanner(System.in);
+      List <String> pending_order_ids = new ArrayList<>();
+      String receiver_center_id = "", part_id="", car_model="";
+      int additional_quantity = 0, current_quantity=0, quantity=0;
+      
+    	  //update the inventory table of the receivers side
+    	  	//check status pending order id and - check center id_receiver of that order from makes table
+    	  		//-update the inventory table- current quantity of the receiver center id 
+    	  //update actual date and status from ordered parts table
+    	  try{
+    	      connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
+    	      
+    	      stmt = connection.prepareStatement("SELECT OrderID FROM OrderPart WHERE Status = ?");
+    	      stmt.setString(1, "Pending");
+    	      rs = stmt.executeQuery();
+    	      
+    	      while(rs.next()) {
+    	    	  pending_order_ids.add(rs.getString(1));
+    	      }
+    	      
+    	      stmt.close();
+    	      rs.close();
+    	      
+    	      for(String pending_order: pending_order_ids) {
+    	    	  
+    	    	  System.out.println("Did order number " + pending_order+" arrive?\n1. Yes\n2. No");
+    	          int part_arrived = t.nextInt();
+    	          
+    	          if(part_arrived == 1) {
+    	        	  stmt = connection.prepareStatement("SELECT CenterId_receiver FROM Makes WHERE OrderID =?");
+    	        	  stmt.setString(1, pending_order);
+    	        	  rs = stmt.executeQuery();
+    	    	      
+    	    	      while(rs.next()) {
+    	    	    	  receiver_center_id = rs.getString(1);
+    	    	      }
+    	    	      stmt.close();
+    	    	      rs.close();
+    	    	      
+    	    	      stmt = connection.prepareStatement("SELECT Part_ID, car_make FROM OrderPart WHERE CenterID = ?");
+    	    	      stmt.setString(1, receiver_center_id);
+    	    	      rs = stmt.executeQuery();
+    	    	      while(rs.next()) {
+    	    	    	  part_id = rs.getString(1);
+    	    	    	  car_model = rs.getString(2);
+    	    	      }
+    	    	      stmt.close();
+    	    	      rs.close();
+    	    	      
+    	    	      stmt = connection.prepareStatement("SELECT quantity FROM OrderPart WHERE CenterID = ? AND Part_ID = ? AND car_make = ?");
+    	    	      stmt.setString(1, receiver_center_id);
+    	    	      stmt.setString(2, part_id);
+    	    	      stmt.setString(3, car_model);
+    	    	      rs = stmt.executeQuery();
+    	    	      while(rs.next()) {
+    	    	    	  additional_quantity = rs.getInt(1);
+    	    	      }
+    	    	      stmt.close();
+    	    	      rs.close();
+    	    	      
+    	    	      stmt = connection.prepareStatement("SELECT Current_quantity FROM Inventory WHERE CenterID = ? AND PartID = ? AND Car_model = ?");
+    	    	      stmt.setString(1, receiver_center_id);
+    	    	      stmt.setString(2, part_id);
+    	    	      stmt.setString(3, car_model);
+    	    	      rs = stmt.executeQuery();
+    	    	      while(rs.next()) {
+    	    	    	  current_quantity = rs.getInt(1);
+    	    	      }
+    	    	      stmt.close();
+    	    	      rs.close();
+    	    	      
+    	    	      quantity = current_quantity + additional_quantity;
+    	    	      
+    	    	      stmt = connection.prepareStatement("UPDATE Inventory SET Current_quantity = ? WHERE CenterID = ? AND PartID = ? AND Car_model = ?");
+    	    	      stmt.setInt(1, additional_quantity);
+    	    	      stmt.setString(2, receiver_center_id);
+    	    	      stmt.setString(3, part_id);
+    	    	      stmt.setString(4, car_model);
+    	    	      
+    	    	      stmt.executeUpdate();
+    	    	      stmt.close();
+    	    	      
+    	    	      SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+    	    	  	  Date date = new Date();
+    	    	  	  String current_date = (formatter.format(date));
+    	    	      
+    	    	  	  stmt = connection.prepareStatement("UPDATE OrderPart SET Status = 'Complete' , Actual_date = ? WHERE CenterID = ? AND Part_ID = ? AND car_make = ?");
+    	    	      stmt.setString(1, current_date);
+    	    	      stmt.setString(2, receiver_center_id);
+    	    	      stmt.setString(3, part_id);
+    	    	      stmt.setString(4, car_model);
+    	    	      
+    	    	      stmt.executeUpdate();
+    	    	      stmt.close();
+    	    	      
+    	    	      
+    	          }
+    	      }
 
-      System.out.println("Run a task to update the counts of parts to be used that day, basically adjusted"
-                          +"(decrementing them) to reflect the fact the parts will be removed and actually"
-                        +  "used that day. At the end, show a message displaying whether the task finished"
-                        +  "running successfully or not.");
+    	      DBUtility.close(connection);
+
+    	    }catch(SQLException e){
+    	      System.out.println("Connection Failed! Check output console");
+    	      e.printStackTrace();
+    	      DBUtility.close(connection);
+    	      
+    	    }
+    	  
+      
+      
+      
 
       System.out.println("Please select the following");
       System.out.println("1.Go Back");
