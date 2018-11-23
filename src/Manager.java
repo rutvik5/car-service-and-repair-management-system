@@ -37,7 +37,7 @@ public class Manager{
 	  switch(user_choice){
       case 1: emp.displayProfile(user_id);
       break;
-      case 2: emp.viewCustomerProfile(user_id);
+      case 2: emp.viewCustomerProfile();
       break;
       case 3: addEmployee();
       break;

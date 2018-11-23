@@ -11,7 +11,11 @@ String userId;
   Connection connection;
   PreparedStatement stmt=null;
   ResultSet rs= null;
-
+  int custid;
+  String license_plate="";
+ int current_mileage=0;
+ String mechanic_name="";
+ String serviceType="";
   public void displayCustomerLanding(String user_id){
 	  userId =user_id;
     System.out.println("1.Profile\n2.Register Car\n3.Service\n4.Invoices\n5.Logout");
@@ -19,7 +23,7 @@ String userId;
     int option= t.nextInt();
     switch(option){
       case 1:
-            profile();
+            profile(userId);
             break;
       case 2:
             registerCar();
@@ -36,7 +40,7 @@ String userId;
     }
   }
 
-  public void profile(){
+  public void profile(String CutomerId){
     System.out.println("Enter one of the following");
     System.out.println("1.View Profile\n2. Update Profile\n3. Go Back");
 
@@ -46,17 +50,17 @@ String userId;
 
     switch(option){
       case 1:
-            viewProfile();
+            viewProfile(CutomerId);
             break;
       case 2:
-            updateProfile();
+            updateProfile(CutomerId);
             break;
       case 3:
-            displayCustomerLanding(userId);
+            displayCustomerLanding(CutomerId);
             break;
     }
   }
-  public void viewProfile(){
+  public void viewProfile(String CutomerId){
     System.out.println("DB:Display details of the customer ID, name, address, email, phone, list of cars w/ details");
 
     
@@ -64,7 +68,7 @@ String userId;
         connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
 
         stmt = connection.prepareStatement("select custid from Customer where cust_email = ?");
-        stmt.setString(1, userId);
+        stmt.setString(1, CutomerId);
         rs = stmt.executeQuery();
         int id=0;
         while (rs.next()) {
@@ -79,6 +83,7 @@ String userId;
         System.out.println ("Email:"+rs.getString(3));
         System.out.println ("Address:"+rs.getString(4));
         System.out.println ("Phone:"+rs.getInt(5));
+        System.out.println("");
         }
         rs.close();
         
@@ -97,6 +102,7 @@ String userId;
             System.out.println ("Last milage:"+rs.getInt(5));
             System.out.println ("Recent Service Type:"+rs.getString(6));
             System.out.println ("Recent Service Date"+rs.getString(7));
+            System.out.println("");
             }
         
         DBUtility.close(connection);
@@ -113,98 +119,109 @@ String userId;
     int option= t.nextInt();
     switch(option){
       case 1:
-            profile();
+            profile(CutomerId);
             break;
     }
   }
 
-  public void updateProfile(){
-    System.out.println("Enter one of the following");
-    System.out.println("1. Name\n2. Address\n3. Phone Number\n 4. Password\n 5. Go Back");
-
+  public void updateProfile(String CutomerId){
+    System.out.println("Enter one of the following to update");
+    int id=0;
+    System.out.println("1. Name\n2. Address\n3. Phone Number\n4. Password\n5. Go Back");
     Scanner t= new Scanner(System.in);
     int option= t.nextInt();
+    t.nextLine();
+    try{
+        connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
+        stmt = connection.prepareStatement("select custid from Customer where cust_email = ?");
+        stmt.setString(1, CutomerId);
+        rs = stmt.executeQuery();
+        while (rs.next()) {
+            id = rs.getInt(1);
+            }
+        rs.close();
+      }catch(SQLException e){
+        System.out.println("Connection Failed! Check output console");
+        e.printStackTrace();
+      }
+    
 
     switch(option){
       case 1:
-            System.out.print("Enter new name\t");
-            String name= t.next();
-            System.out.println("");
-
-            System.out.println("Add this new value to our DB");
+            System.out.println("Enter new name\t");
+            String name= t.nextLine();
+		try {
+			stmt = connection.prepareStatement("update customer set cust_name=? where custid=?");
+			stmt.setString(1, name);
+			stmt.setInt(2,id);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+            System.out.println("Database Updated");
+            updateProfile(CutomerId);
             break;
       case 2:
-            System.out.print("Enter new address\t");
-            String address= t.next();
-            System.out.println("");
-
-            System.out.println("Add this new value to our DB");
+            System.out.println("Enter new address\t");
+            String address= t.nextLine();
+            try {
+    			stmt = connection.prepareStatement("update customer set Cust_address=? where custid=?");
+    			stmt.setString(1, address);
+    			stmt.setInt(2,id);
+    			stmt.executeUpdate();
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    		} 
+            System.out.println("Database Updated");
+            updateProfile(CutomerId);
             break;
       case 3:
-            System.out.print("Enter new phone number\t");
-            String phoneNumber= t.next();
-            System.out.println("");
-
-            System.out.println("Add this new value to our DB");
+            System.out.println("Enter new phone number\t");
+            String phoneNumber= t.nextLine();
+            try {
+    			stmt = connection.prepareStatement("update customer set Cust_Phone=? where custid=?");
+    			stmt.setString(1, phoneNumber);
+    			stmt.setInt(2,id);
+    			stmt.executeUpdate();
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    		} 
+            System.out.println("Database Updated");
+            updateProfile(CutomerId);
             break;
       case 4:
-            System.out.print("Enter new password\t");
-            String password= t.next();
-            System.out.println("");
-
-            System.out.println("Add this new value to our DB");
-            break;
+            System.out.println("Enter new password\t");
+            String password= t.nextLine();
+            try {
+    			stmt = connection.prepareStatement("update login set password= ? where loginid=?");
+    			stmt.setString(1, password);
+    			stmt.setString(2,CutomerId);
+    			stmt.executeUpdate();
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    		} 
+            System.out.println("Database Updated");
+            updateProfile(CutomerId);
+            break;  
       case 5:
-            profile();
+            profile(CutomerId);
+            break;
     }
 
-    updateProfile();
   }
   public void registerCar(){
-    Scanner t= new Scanner(System.in);
-
-    System.out.println("Please enter the following details");
-    // run queries to add the following details into database
-    System.out.print("B. License Plate:\t");
-    String license_plate= t.next();
-    System.out.println("");
-
-    System.out.print("C. Purchase Date:\t");
-    String purchase_date= t.next();
-    System.out.println("");
-
-    System.out.print("D. Make:\t");
-    String make= t.next();
-    System.out.println("");
-
-    System.out.print("E. Model:\t");
-    String model= t.next();
-    System.out.println("");
-
-    System.out.print("F. Year:\t");
-    String year= t.next();
-    System.out.println("");
-
-    System.out.print("G. Current Mileage:\t");
-    String current_mileage= t.next();
-    System.out.println("");
-
-    System.out.print("H. Last Service Date (optional):\t");
-    String last_service_date= t.next();
-    System.out.println("");
-
     System.out.println("Please select one of the following");
     System.out.println("1. Register" + "\n" + "2. Cancel");
-
+    Scanner t = new Scanner(System.in);
     int user_choice= t.nextInt();
     switch (user_choice) {
       case 1:
-            String carType= make + model + year;
-            System.out.println("Car Successfully Added");
-            //save the user info to database
+            CarService cs = new CarService();
+            cs.AddCar(userId);
             displayCustomerLanding(userId);
-
-      case 2: displayCustomerLanding(userId);// do not add anything to db
+            break;
+      case 2: displayCustomerLanding(userId);
+      break;
 
     }
 
@@ -216,10 +233,27 @@ String userId;
 
     Scanner t= new Scanner(System.in);
     int option= t.nextInt();
+    try{
+        connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
 
+        stmt = connection.prepareStatement("select custid from Customer where cust_email = ?");
+        stmt.setString(1, userId);
+        rs = stmt.executeQuery();
+        
+        while (rs.next()) {
+            custid = rs.getInt(1);
+            }
+        rs.close();
+        DBUtility.close(connection);
+
+      }catch(SQLException e){
+        System.out.println("Connection Failed! Check output console");
+        e.printStackTrace();
+      }
+    
     switch(option){
       case 1:
-            viewServiceHistory();
+            viewServiceHistory(custid);
             break;
       case 2:
             scheduleService();
@@ -232,10 +266,12 @@ String userId;
     }
   }
 
-  public void viewServiceHistory(){
+  public void viewServiceHistory(int custId){
     Scanner t= new Scanner(System.in);
 
-    System.out.println("Display this from DB: service_id, license_plate, service_type, mechanic_name, service_start-date/time, service_end-date/time(expected or actual), service_status(Pending/Ongoing/Complete)");
+    System.out.println("Service History Details");
+    CarService cs = new CarService();
+    cs.serviceHistory(custId);
     System.out.println("Press 1 to Go Back");
     int option= t.nextInt();
     if(option==1){
@@ -244,31 +280,34 @@ String userId;
   }
 
   public void scheduleService(){
-    Scanner t= new Scanner(System.in);
-
-    System.out.println("Please enter the following details");
-    // run queries to add the following details into database
-
-    System.out.print("B. License Plate:\t");
-    String license_plate= t.next();
-    System.out.println("");
-
-    System.out.print("C. Current Mileage:\t");
-    String current_mileage= t.next();
-    System.out.println("");
-
-    System.out.print("D. Mechanic Name(Optional):\t");
-    String mechanic_name= t.next();
-    System.out.println("");
 
     //based on the above entered data, provide the users following options
     System.out.println("Please select one of the following");
     System.out.println("1. Schedule Maintenance" + "\n" + " 2. Schedule Repair" + "\n" + "3. Go Back");
-
+    Scanner t= new Scanner(System.in);
     int user_choice= t.nextInt();
+    t.nextLine();
+    if (user_choice==1 || user_choice==2) {
+        
+        System.out.println("Please enter the following details");
+        // run queries to add the following details into database
+
+        System.out.print("B. License Plate:\t");
+        license_plate= t.nextLine();
+        System.out.println("");
+
+        System.out.print("C. Current Mileage:\t");
+        current_mileage= t.nextInt();
+        t.nextLine();
+        System.out.println("");
+
+        System.out.print("D. Mechanic Name(Optional):\t");
+        mechanic_name= t.nextLine();
+        System.out.println("");
+    }
     switch (user_choice) {
 
-      case 1: scheduleMaintenance();
+      case 1: scheduleMaintenance(license_plate, current_mileage,mechanic_name);
       break;
       case 2: scheduleRepair();
       break;
@@ -277,9 +316,8 @@ String userId;
 
     }
   }
-  public void scheduleMaintenance(){
+  public void scheduleMaintenance(String license_plate, int current_mileage,String mechanic_name){
     Scanner t= new Scanner(System.in);
-
     System.out.println("Please select one of the following");
     System.out.println("1. Find Service Date" + "\n" + " 2. Go Back");
 
@@ -292,21 +330,97 @@ String userId;
   }
   public void findServiceDate(){
     Scanner t= new Scanner(System.in);
-    //display the 2 earliest available dates from the db
+    try{
+        connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
+        getServiceType();
+        getBasicID();
+        
+        DBUtility.close(connection);
+
+      }catch(SQLException e){
+        System.out.println("Connection Failed! Check output console");
+        e.printStackTrace();
+      }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     System.out.println("Please select one of the following");
     System.out.println("1. Schedule on Date" + "\n" + " 2. Go Back");
-
     int user_choice= t.nextInt();
     switch (user_choice) {
 
-      case 1:
+      case 1: 
               System.out.println("Service appointment successfully saved");
               scheduleService();
 
-      case 2: scheduleMaintenance();
+      case 2: scheduleMaintenance(license_plate,current_mileage,mechanic_name);
       default: System.out.println("Enter a valid choice");
     }
   }
+
+private void getBasicID() {
+	
+	
+}
+
+private void getServiceType() throws SQLException {
+	String carType="";
+	int mileage=0;
+	stmt = connection.prepareStatement("select type_recent_service from Cars where licenseplateid = ?");
+	stmt.setString(1, license_plate);
+	rs = stmt.executeQuery();
+	
+	if (rs.next()) {
+		if (rs.getString(1)==null) {
+			rs.close();
+			stmt = connection.prepareStatement("select last_mileage,car_type from Cars where licenseplateid = ?");
+	    	stmt.setString(1, license_plate);
+	        rs = stmt.executeQuery();
+	        if (rs.next()) {
+	        	mileage=rs.getInt(1);
+	        	carType=rs.getString(2).split(",")[0].trim()+ " "+rs.getString(2).split(",")[1].trim();
+	        } 
+	        rs.close();
+	        stmt = connection.prepareStatement("select miles from basic_service_mapping where car_model = ?");
+	        stmt.setString(1, carType);
+	        rs = stmt.executeQuery();
+	        int m[]=new int[3];
+	        int i=0;
+	        while(rs.next()) {
+	        	m[i]=rs.getInt(1);
+	        	i++;
+	        }
+	        rs.close();
+	        if (mileage<m[0]) {
+	        	serviceType="A";
+	        } else if (mileage>m[2]) {
+	        	serviceType="C";
+	        } else {
+	        	serviceType="B";
+	        }
+	        stmt = connection.prepareStatement("Update Cars set type_recent_service = ? where licenseplateid = ?");
+	        stmt.setString(1, serviceType);
+	        stmt.setString(2, license_plate);
+	        stmt.executeQuery();
+		} else if (rs.getString(1).trim().equalsIgnoreCase("A")){
+			serviceType="B";
+		} else if (rs.getString(1).trim().equalsIgnoreCase("B")){
+			serviceType="C";
+		} else {
+			serviceType="A";
+		}
+	    } 
+	rs.close();
+}
 
   public void scheduleRepair(){
     Scanner t= new Scanner(System.in);

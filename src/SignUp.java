@@ -14,6 +14,7 @@ class SignUp{
     String user_name;
     String user_address;
     String user_phone;
+    String service_center;
     
   public void displaySignUp(){
     Scanner t= new Scanner(System.in);
@@ -37,6 +38,9 @@ class SignUp{
 
     System.out.println("Phone Number:\t");
     user_phone= t.nextLine();
+    
+    System.out.println("Service Center to Register with:\t");
+    service_center= t.nextLine();
 
     System.out.println("Please select one of the following");
     System.out.println("1. Sign-Up\n 2. Go Back");
@@ -73,6 +77,12 @@ class SignUp{
 	      stmt.setString(1, user_email);
 	      stmt.setString(2, user_password);
 	      stmt.executeUpdate();
+	      
+	      stmt = connection.prepareStatement("insert into goesto values('00000000',?,?)");
+	      stmt.setInt(1, newId);
+	      stmt.setString(2, service_center);
+	      stmt.executeUpdate();
+	      
 	      DBUtility.close(connection);
 
 	    }catch(SQLException e){

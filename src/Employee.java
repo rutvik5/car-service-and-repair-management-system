@@ -10,8 +10,14 @@ public class Employee{
   PreparedStatement stmt, stmt1;
   ResultSet rs, rs1;
   Connection connection;
-  public void viewCustomerProfile(String userID){
-
+  public void viewCustomerProfile(){
+	  
+	  //Wrong code
+/*Customer cust = new Customer();
+Scanner t = new Scanner(System.in);
+System.out.println("Please enter customer email id:");
+String id = t.nextLine();
+cust.profile(id);*/
   }
 
 public void displayProfile(String user_id){

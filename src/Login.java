@@ -24,7 +24,7 @@ class Login{
     try{
         connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
 
-        stmt=connection.prepareStatement("SELECT PASSWORD,ROLE FROM LOGIN WHERE LOGINID=?");
+        stmt=connection.prepareStatement("SELECT PASSWORD,ROLE FROM LOGIN WHERE TRIM(LoginId)=?");
         stmt.setString(1, user_id);
         rs = stmt.executeQuery();
         while (rs.next()) {
