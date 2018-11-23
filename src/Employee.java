@@ -243,7 +243,7 @@ String newName="";
 	      e.printStackTrace();
 	      DBUtility.close(connection);
 	      
-	    }
+	    }}
 
 
 private void viewProfile(String user_id) {
