@@ -244,7 +244,7 @@ String newName="";
 	      DBUtility.close(connection);
 	      
 	    }
-
+}
 
 private void viewProfile(String user_id) {
 	String empID="",Emp_Name="",Emp_address="", Emp_email="", Emp_Phone="", Center_Name="", Start_Date="";
