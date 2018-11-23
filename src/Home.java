@@ -27,6 +27,7 @@ class Home{
       break;
       default: System.out.println("Please enter a valid choice");
       displayHomepage();
+      break;
     }
   }
 }

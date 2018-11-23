@@ -1,0 +1,54 @@
+Distribtor:
+Add name
+
+Full type emp: 
+Add start date
+
+Inventory:
+Add for Honda/nissan/Toyota (add car name)
+Add Warranty Attribute (may be null)
+
+Appointment:
+Change name of slot to "Start time"
+
+OrderPart:
+add Expected date
+Add Actual delivery date
+remove sender and receiver as it is now covered in makes
+
+Notification:
+Change timestamp to date
+
+Makes table:
+Add center_id sender
+add center_id receiver
+remove cascades 
+make orderid and center id receiver as key
+
+Cars:
+Remove owned by  -should be handle by goes to table
+
+BasicService:
+Centerid is not required.
+Instead use car type (Eg Nissan Accord) .
+As parts vary based on car type, not on service center
+
+****Add new table:
+Basic service contained in A/B/C is dependent on car type
+Add table with coulmn car type, A/B/C, basic service type
+and then add java logic to relate service id to this
+
+*** add new table:
+Car type, A/B/C, miles after which service needed
+
+Repair:
+Add attribute : to store basic serivces utilised by that repair (Use Varchar)
+
+Service HIstory for Customer-> Service status/ end-date of service
+
+
+
+
+
+
+

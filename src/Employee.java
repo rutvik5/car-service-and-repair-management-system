@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class Employee{
+
   Scanner t =new Scanner(System.in);
   PreparedStatement stmt;
   PreparedStatement stmt1;
@@ -18,7 +19,8 @@ public class Employee{
   }
 
 public void displayProfile(String user_id){
-	
+	Scanner t = new Scanner(System.in);
+
 	  System.out.println("Please select one of the following");
 	  System.out.println("1. View Profile\n" +
 	  		"2. Update Profile\n" +
@@ -31,6 +33,10 @@ public void displayProfile(String user_id){
 	  break;
 	  case 3: redirectAccording(user_id);
 	  break;
+
+	  default: System.out.println("Please enter a valid choice");
+	  displayProfile(user_id);
+
 	  }
 	  
   }
@@ -80,8 +86,9 @@ private void updateProfile(String user_id) {
 		t.nextLine();
 		
 	  switch (choice) {
+
 	  case 1: updateName(user_id);
-	  		  updateProfile(user_id);
+	  	  updateProfile(user_id);
 	  		  
 	  case 2: updateAddress(user_id);
 	          updateProfile(user_id);
@@ -93,13 +100,14 @@ private void updateProfile(String user_id) {
 	          updateProfile(user_id);
 	  
 	  case 5: updatePassword(user_id);
-	  		  updateProfile(user_id);
+	  	  updateProfile(user_id);
 	 
 	  case 6: displayProfile(user_id);
 	          
 	  }
 	} while (choice !=6);
 }
+
 
 private void updatePassword(String user_id) {
 	String newPassword="";
@@ -237,7 +245,6 @@ String newName="";
 	      
 	    }
 
-}
 
 private void viewProfile(String user_id) {
 	String empID="",Emp_Name="",Emp_address="", Emp_email="", Emp_Phone="", Center_Name="", Start_Date="";
@@ -299,6 +306,7 @@ private void viewProfile(String user_id) {
     rs1.close();
     stmt.close();
     stmt1.close();
+
     DBUtility.close(connection);
 
   }catch(SQLException e){

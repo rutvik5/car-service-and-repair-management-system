@@ -28,7 +28,7 @@ class Receptionist{
 
     switch(user_choice){
       case 1: employee.displayProfile(user_id);
-      		  break;
+      break;
       case 2: employee.viewCustomerProfile();
       break;
       case 3: registerCar();
