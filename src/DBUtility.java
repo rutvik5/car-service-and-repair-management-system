@@ -26,7 +26,6 @@ public class DBUtility {
 					conn= DriverManager.getConnection(jdbcURL, username, password);
 
 					if(conn != null){
-						System.out.println("Connection Successful");
 					}
 					else{
 						System.out.println("Failed to connect");

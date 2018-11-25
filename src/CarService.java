@@ -107,20 +107,21 @@ public void serviceHistory(int customerId) {
 	try{
         connection= DBUtility.connectDB(SetupConnection.username, SetupConnection.password);
 
-        String query= "Select S.ServiceID, C.LicensePlateID, C.Type_Recent_Service, R.Mechanic_Preference, A.start_slot, A.App_Date, A.end_slot" + 
-        		" from GoesTo G, Cars C, Request R, Appointment A, LinkedTo L, Service S\r\n" + 
+        String query= "Select S.ServiceID, C.LicensePlateID, M.service_type, R.Mechanic_Preference, A.start_slot, A.App_Date, A.end_slot" + 
+        		" from GoesTo G, Cars C, Request R, Appointment A, LinkedTo L, Service S, Maintenance M\r\n" + 
         		" WHERE G.LicensePlateID = C.LicensePlateID" + 
         		" AND   C.LicensePlateID = R.LicensePlateID" + 
         		" AND   R.Appointmentno = A.Appointmentno" + 
         		" AND   A.Appointmentno = L.Appointmentno" + 
         		" AND   L.ServiceID = S.ServiceID" + 
+        		" AND   M.ServiceID = S.ServiceID" +
         		" AND   G.CustID = ?";
         stmt = connection.prepareStatement(query);
         stmt.setInt(1, customerId);
         rs = stmt.executeQuery();
         
         while (rs.next()) {
-            System.out.println("service Id"+rs.getInt(1));
+            System.out.println("service Id:"+rs.getInt(1));
             System.out.println("License plate id:"+rs.getString(2));
             System.out.println("Recent service Type:"+rs.getString(3));  
             System.out.println("Preffered mechanic:"+rs.getString(4));
@@ -130,10 +131,31 @@ public void serviceHistory(int customerId) {
             System.out.println("Service status:"+getStatus());
             System.out.println("");
             }
+
+        String query1= "Select S.ServiceID, C.LicensePlateID, R.problem_cause, R.Mechanic_Preference, A.start_slot, A.App_Date, A.end_slot" + 
+        		" from GoesTo G, Cars C, Request R, Appointment A, LinkedTo L, Service S, Repair R\r\n" + 
+        		" WHERE G.LicensePlateID = C.LicensePlateID" + 
+        		" AND   C.LicensePlateID = R.LicensePlateID" + 
+        		" AND   R.Appointmentno = A.Appointmentno" + 
+        		" AND   A.Appointmentno = L.Appointmentno" + 
+        		" AND   L.ServiceID = S.ServiceID" + 
+        		" AND   R.ServiceID = S.ServiceID" +
+        		" AND   G.CustID = ?";
+        stmt = connection.prepareStatement(query1);
+        stmt.setInt(1, customerId);
+        rs = stmt.executeQuery();
         
-        
-        	rs.close();
-        	
+        while (rs.next()) {
+            System.out.println("service Id:"+rs.getInt(1));
+            System.out.println("License plate id:"+rs.getString(2));
+            System.out.println("Problem Caused:"+rs.getString(3));  
+            System.out.println("Preffered mechanic:"+rs.getString(4));
+            System.out.println("Start time:"+convertSlotToTime(rs.getInt(5)));
+            System.out.println("Appointment date:"+rs.getString(6));
+            System.out.println("Total time:"+(rs.getInt(7)-rs.getInt(5)+1)*30+ " minutes");
+            System.out.println("Service status:"+getStatus());
+            System.out.println("");
+            }
         
         DBUtility.close(connection);
 

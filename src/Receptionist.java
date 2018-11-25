@@ -13,35 +13,50 @@ class Receptionist{
 	Connection connection;
 	PreparedStatement stmt;
 	ResultSet rs;
+	UpdateInventory ui=new UpdateInventory();
 	
     public void displayReceptionistLanding(String user_id){
     UserId = user_id;
     Scanner t= new Scanner(System.in);
     Home home= new Home();
     Employee employee= new Employee();
-
+    Customer customer = new Customer();
+    
     System.out.println("Please select one of the following\n");
     System.out.println("1. Profile\n" + "2. View Customer Profile" + "\n" + "3. Register Car" + "\n" + "4. Service History" + "\n" + "5. Schedule Service" + "\n" + "6. Reschedule Service" + "\n" + "7. Invoices" + "\n"
                         +"8. Daily Task Update Inventory" + "\n" + "9. Daily Task- Record Deliveries" + "\n" + "10. Logout");
 
     int user_choice = t.nextInt();
-
+    t.nextLine();
+    String id ="";
     switch(user_choice){
       case 1: employee.displayProfile(user_id);
       break;
-      case 2: employee.viewCustomerProfile();
+      case 2: System.out.println("Enter customer email id:");
+		id =t.nextLine();
+		customer.profile(id, user_id);
       break;
-      case 3: registerCar();
+      case 3: System.out.println("Enter customer email id:");
+      		id =t.nextLine();
+      		customer.registerCar(id);
       break;
-      case 4: serviceHistory();
+      case 4: System.out.println("Enter customer email id:");
+		id =t.nextLine();
+		customer.service(id,UserId);
       break;
-      case 5: scheduleService();
+      case 5: System.out.println("Enter customer email id:");
+		id =t.nextLine();
+		customer.service(id,UserId);
       break;
-      case 6: rescheduleService();
+      case 6:System.out.println("Enter customer email id:");
+		id =t.nextLine();
+		customer.service(id,UserId);
       break;
-      case 7: invoices();
+      case 7: System.out.println("Enter customer email id:");
+		id =t.nextLine();
+		customer.invoices(id, UserId);
       break;
-      case 8: updateInventory();
+      case 8: ui.updateDailyInventory(UserId);
       break;
       case 9: recordDeliverables();
       break;
