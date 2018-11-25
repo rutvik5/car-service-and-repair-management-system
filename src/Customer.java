@@ -41,8 +41,8 @@ String userId;
  int dignostic_fees=0;
  boolean rescheduleFlag=false;
  String receptionistId="";
+ String managerid="";
  HashMap<Integer,Integer> partMap = new HashMap<Integer,Integer>();
- Receptionist r = new Receptionist();
   public void displayCustomerLanding(String user_id){
 	  userId =user_id;
     System.out.println("1.Profile\n2.Register Car\n3.Service\n4.Invoices\n5.Logout");
@@ -50,7 +50,7 @@ String userId;
     int option= t.nextInt();
     switch(option){
       case 1:
-            profile(userId,receptionistId);
+            profile(userId,receptionistId,managerid);
             break;
       case 2:
             registerCar(userId);
@@ -67,8 +67,9 @@ String userId;
     }
   }
 
-  public void profile(String CutomerId,String recpId){
+  public void profile(String CutomerId,String recpId,String mgrId){
 	  receptionistId=recpId;
+	  managerid = mgrId;
     System.out.println("Enter one of the following");
     System.out.println("1.View Profile\n2. Update Profile\n3. Go Back");
 
@@ -83,10 +84,12 @@ String userId;
       case 2:
             updateProfile(CutomerId);
             break;
-      case 3:if(receptionistId.equals("")) {
+      case 3:if(receptionistId.equals("") && managerid.equals("")) {
     	  displayCustomerLanding(CutomerId);
-      } else {
+      } else if (managerid.equals("")){
     	  receptionist.displayReceptionistLanding(receptionistId);
+      } else {
+    	  new Manager().displayManagerLanding(managerid);
       }
       break;
     }
@@ -150,7 +153,7 @@ String userId;
     int option= t.nextInt();
     switch(option){
       case 1:
-            profile(CutomerId,receptionistId);
+            profile(CutomerId,receptionistId,managerid);
             break;
     }
   }
@@ -235,7 +238,7 @@ String userId;
             updateProfile(CutomerId);
             break;  
       case 5:
-            profile(CutomerId,receptionistId);
+            profile(CutomerId,receptionistId,managerid);
             break;
     }
 
@@ -299,7 +302,7 @@ String userId;
       case 4:if(receptionistId.equals("")) {
     	  displayCustomerLanding(userId);
       } else {
-    	  r.displayReceptionistLanding(receptionistId);
+    	  receptionist.displayReceptionistLanding(receptionistId);
     }           break;
     }
   }

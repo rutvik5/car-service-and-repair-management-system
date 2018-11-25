@@ -13,7 +13,6 @@ class Receptionist{
 	Connection connection;
 	PreparedStatement stmt;
 	ResultSet rs;
-	UpdateInventory ui=new UpdateInventory();
 	
     public void displayReceptionistLanding(String user_id){
     UserId = user_id;
@@ -34,215 +33,13 @@ class Receptionist{
       break;
       case 2: System.out.println("Enter customer email id:");
 		id =t.nextLine();
-		customer.profile(id, user_id);
+		customer.profile(id, user_id,"");
       break;
       case 3: System.out.println("Enter customer email id:");
       		id =t.nextLine();
       		customer.registerCar(id);
       break;
-      case 4: System.out.println("Enter customepublic void serviceHistory(){\n" + 
-      		"    Scanner t= new Scanner(System.in);\n" + 
-      		"\n" + 
-      		"    System.out.println(\"Please enter the following details\");\n" + 
-      		"    // run queries to add the following details into database\n" + 
-      		"    System.out.print(\"A. Customer email address:\\t\");\n" + 
-      		"    String customer_email= t.next();\n" + 
-      		"    System.out.println(\"\");\n" + 
-      		"\n" + 
-      		"    /* based on the customer_email, display the following:\n" + 
-      		"\n" + 
-      		"    service_id, license_plate, service_type, mechanic_name, service_start-date/time,\n" + 
-      		"    service_end-date/time(expected or actual), service_status(Pending/Ongoing/Complete) */\n" + 
-      		"\n" + 
-      		"    System.out.println(\"Go Back? Enter 1\");\n" + 
-      		"    displayReceptionistLanding(UserId);\n" + 
-      		"  }\n" + 
-      		"\n" + 
-      		"  public void scheduleService(){\n" + 
-      		"\n" + 
-      		"    Scanner t= new Scanner(System.in);\n" + 
-      		"\n" + 
-      		"    System.out.println(\"Please enter the following details\");\n" + 
-      		"    // run queries to add the following details into database\n" + 
-      		"    System.out.print(\"A. Customer email address:\\t\");\n" + 
-      		"    String customer_email= t.next();\n" + 
-      		"    System.out.println(\"\");\n" + 
-      		"\n" + 
-      		"    System.out.print(\"B. License Plate:\\t\");\n" + 
-      		"    String license_plate= t.next();\n" + 
-      		"    System.out.println(\"\");\n" + 
-      		"\n" + 
-      		"    System.out.print(\"C. Current Mileage:\\t\");\n" + 
-      		"    String current_mileage= t.next();\n" + 
-      		"    System.out.println(\"\");\n" + 
-      		"\n" + 
-      		"    System.out.print(\"D. Mechanic Name(Optional):\\t\");\n" + 
-      		"    String mechanic_name= t.next();\n" + 
-      		"    System.out.println(\"\");\n" + 
-      		"\n" + 
-      		"    //based on the above entered data, provide the users following options\n" + 
-      		"    System.out.println(\"Please select one of the following\");\n" + 
-      		"    System.out.println(\"1. Schedule Maintenance\" + \"\\n\" + \" 2. Schedule Repair\" + \"\\n\" + \"3. Go Back\");\n" + 
-      		"\n" + 
-      		"    int user_choice= t.nextInt();\n" + 
-      		"    switch (user_choice) {\n" + 
-      		"\n" + 
-      		"      case 1: scheduleMaintenance();\n" + 
-      		"break;\n" + 
-      		"      case 2: scheduleRepair();\n" + 
-      		"      break;\n" + 
-      		"      case 3: displayReceptionistLanding(UserId);\n" + 
-      		"      break;\n" + 
-      		"      default: System.out.println(\"Enter a valid choice\");\n" + 
-      		"\n" + 
-      		"    }\n" + 
-      		" }\n" + 
-      		"    public void scheduleMaintenance(){\n" + 
-      		"      Scanner t= new Scanner(System.in);\n" + 
-      		"\n" + 
-      		"      System.out.println(\"Please select one of the following\");\n" + 
-      		"      System.out.println(\"1. Find Service Date\" + \"\\n\" + \" 2. Go Back\");\n" + 
-      		"\n" + 
-      		"      int user_choice= t.nextInt();\n" + 
-      		"      switch (user_choice) {\n" + 
-      		"        case 1: findServiceDate();\n" + 
-      		"        break;\n" + 
-      		"        case 2: scheduleService();\n" + 
-      		"        break;\n" + 
-      		"        default: System.out.println(\"Enter a valid choice\");\n" + 
-      		"        break;\n" + 
-      		"      }\n" + 
-      		"    }\n" + 
-      		"\n" + 
-      		"    public void findServiceDate(){\n" + 
-      		"      Scanner t = new Scanner(System.in);\n" + 
-      		"      //display the 2 earliest available dates from the db\n" + 
-      		"      System.out.println(\"Please select one of the following\");\n" + 
-      		"      System.out.println(\"1. Schedule on Date\" + \"\\n\" + \" 2. Go Back\");\n" + 
-      		"\n" + 
-      		"      int user_choice= t.nextInt();\n" + 
-      		"      switch (user_choice) {\n" + 
-      		"\n" + 
-      		"        case 1:\n" + 
-      		"                System.out.println(\"Service appointment successfully saved\");\n" + 
-      		"                scheduleService();\n" + 
-      		"                break;\n" + 
-      		"        case 2: scheduleMaintenance();\n" + 
-      		"        break;\n" + 
-      		"        default: System.out.println(\"Enter a valid choice\");\n" + 
-      		"        break;\n" + 
-      		"      }\n" + 
-      		"    }\n" + 
-      		"\n" + 
-      		"    public void scheduleRepair(){\n" + 
-      		"      Scanner t= new Scanner(System.in);\n" + 
-      		"\n" + 
-      		"      System.out.println(\"Please select one of the following encountered problem\");\n" + 
-      		"      System.out.println(\"1. Engine knock\" + \"\\n\" + \"2. Car drifts in a particular direction\" + \"\\n\" + \"3. Battery does not hold charge\" + \"\\n\" + \"4. Black/unclean exhaust\" + \"\\n\"\n" + 
-      		"      + \"5. A/C- Heater not working\" + \"\\n\" + \"6. Headlapms/Tail lamps not working\" + \"\\n\" + \"7. Check engine light\" + \"\\n\" + \"8.Go Back\");\n" + 
-      		"\n" + 
-      		"      int user_choice= t.nextInt();\n" + 
-      		"      switch (user_choice) {\n" + 
-      		"        //based on the repair display the report, 2 identifed service dates, mechanic_name\n" + 
-      		"        case 1:\n" + 
-      		"        case 2:\n" + 
-      		"        case 3:\n" + 
-      		"        case 4:\n" + 
-      		"        case 5:\n" + 
-      		"        case 6:\n" + 
-      		"        case 7:\n" + 
-      		"        case 8: scheduleService();\n" + 
-      		"        default: System.out.println(\"Enter a valid choice\");\n" + 
-      		"\n" + 
-      		"        selectRepairDate();\n" + 
-      		"      }\n" + 
-      		"    }\n" + 
-      		"\n" + 
-      		"    public void selectRepairDate(){\n" + 
-      		"      Scanner t= new Scanner(System.in);\n" + 
-      		"\n" + 
-      		"      System.out.println(\"Please select one of the following\");\n" + 
-      		"      System.out.println(\"1. Repair on Date\" + \"\\n\" + \"2. Go Back\");\n" + 
-      		"\n" + 
-      		"      int user_choice= t.nextInt();\n" + 
-      		"      switch (user_choice) {\n" + 
-      		"\n" + 
-      		"        case 1:\n" + 
-      		"                System.out.println(\"Repair appointment successfully saved\");\n" + 
-      		"                scheduleService();\n" + 
-      		"\n" + 
-      		"        case 2: scheduleRepair();\n" + 
-      		"        default: System.out.println(\"Enter a valid choice\");\n" + 
-      		"      }\n" + 
-      		"    }\n" + 
-      		"\n" + 
-      		"    public void rescheduleService(){\n" + 
-      		"      Scanner t= new Scanner(System.in);\n" + 
-      		"\n" + 
-      		"      System.out.println(\"Ask user to enter customer email-id and display the following: License Plate,\"\n" + 
-      		"                        +  \"Service ID, Service Date, Service Type(Maintenance/Repair),\"\n" + 
-      		"                        +  \"Service Details(Service A/B/C orProblem)\");\n" + 
-      		"\n" + 
-      		"      System.out.print(\"Enter the email\\t\");\n" + 
-      		"      String customer_email= t.next();\n" + 
-      		"      System.out.println(\"\");\n" + 
-      		"\n" + 
-      		"      System.out.println(\"Please select one of the following\");\n" + 
-      		"      System.out.println(\"1. Pick a Service\" + \"\\n\" + \"2. Go Back\");\n" + 
-      		"\n" + 
-      		"      int user_choice= t.nextInt();\n" + 
-      		"      switch (user_choice) {\n" + 
-      		"\n" + 
-      		"        case 1:\n" + 
-      		"                System.out.println(\"If the user chooses 1,ask him to enter one of the service IDs\"\n" + 
-      		"                                  +\"to select the service to be rescheduled and then find two\"\n" + 
-      		"                                    +\"earliest available maintenance/repair dates that are at least\"\n" + 
-      		"                                  +\"one day after the current service date\");\n" + 
-      		"                pickService();\n" + 
-      		"\n" + 
-      		"        case 2: displayReceptionistLanding(UserId);\n" + 
-      		"        default: System.out.println(\"Enter a valid choice\");\n" + 
-      		"      }\n" + 
-      		"    }\n" + 
-      		"\n" + 
-      		"    public void pickService(){\n" + 
-      		"      Scanner t= new Scanner(System.in);\n" + 
-      		"\n" + 
-      		"      System.out.println(\"SQL: display the 2 identified dates and mechanic name\");\n" + 
-      		"\n" + 
-      		"      System.out.println(\"Please select one of the following\");\n" + 
-      		"      System.out.println(\"1. Reschedule Date\" + \"\\n\" + \"2. Go Back\");\n" + 
-      		"\n" + 
-      		"      int user_choice= t.nextInt();\n" + 
-      		"      switch (user_choice) {\n" + 
-      		"\n" + 
-      		"        case 1:\n" + 
-      		"                System.out.println(\"Ask the user to pick one fo the dates shown and add to db\");\n" + 
-      		"                displayReceptionistLanding(UserId);\n" + 
-      		"\n" + 
-      		"        case 2: displayReceptionistLanding(UserId);\n" + 
-      		"        default: System.out.println(\"Enter a valid choice\");\n" + 
-      		"      }\n" + 
-      		"\n" + 
-      		"    }\n" + 
-      		"\n" + 
-      		"    public void invoices(){\n" + 
-      		"      Scanner t= new Scanner(System.in);\n" + 
-      		"\n" + 
-      		"      System.out.println(\"Ask user to enter customer email-id and display the following: Service ID,\"\n" + 
-      		"                        +  \"Service Start, Date/Time, Service End, Date/Time, Licence Plate,\"\n" + 
-      		"                        +  \"Service Type, Mechanic Name, Parts Used in service with cost of each part,\"\n" + 
-      		"                        +  \"Total labor hours, Labor wages per hour, Total Service Cost\");\n" + 
-      		"\n" + 
-      		"      System.out.print(\"Enter the email\\t\");\n" + 
-      		"      String customer_email= t.next();\n" + 
-      		"      System.out.println(\"\");\n" + 
-      		"\n" + 
-      		"      System.out.println(\"Please select the following\");\n" + 
-      		"      System.out.println(\"1.Go Back\");\n" + 
-      		"      int user_choice= t.nextInt();\n" + 
-      		"      if (user_choice == 1) displayReceptionistLanding(UserId);\n" + 
-      		"    }r email id:");
+      case 4: System.out.println("Enter customer email id:");
 		id =t.nextLine();
 		customer.service(id,UserId);
       break;
@@ -259,7 +56,7 @@ class Receptionist{
 		customer.invoices(id, UserId);
       break;
       case 8: 
-    	  ui.updateDailyInventory(UserId);
+    	  new UpdateInventory().updateDailyInventory(UserId);
       break;
       case 9: recordDeliverables();
       break;

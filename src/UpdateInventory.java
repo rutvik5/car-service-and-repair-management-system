@@ -19,7 +19,6 @@ public class UpdateInventory {
 	String cartype="";
 	ResultSet rsm;
 	HashMap<Integer,Integer> partMap;
-	Receptionist rec = new Receptionist();
 	public void updateDailyInventory(String recpId) {
 		try {
 			String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
@@ -31,7 +30,7 @@ public class UpdateInventory {
 				deleteInventoryperAppointment(rsm.getInt(1));
 			}
 			System.out.println("Inventory Successfully updated...");
-			rec.displayReceptionistLanding(recpId);
+			new Receptionist().displayReceptionistLanding(recpId);
 			connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

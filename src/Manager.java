@@ -14,6 +14,7 @@ public class Manager{
 	
 	
 	  Employee emp=new Employee();
+	  Customer cust = new Customer();
 	  Home home = new Home();
 	  Connection connection;
       PreparedStatement stmt, stmt1=null;
@@ -38,10 +39,13 @@ public class Manager{
 	  		"12. Logout");
 	  
 	  int user_choice = t.nextInt();
+	  t.nextLine();
 	  switch(user_choice){
-      case 1: emp.displayProfile(user_id);
+      case 1: emp.displayProfile(userId);
       break;
-      case 2: emp.viewCustomerProfile();
+      case 2: System.out.println("Enter customer email id:");
+		String id =t.nextLine();
+		cust.profile(id,"",userId);
       break;
       case 3: addEmployee();
       break;
