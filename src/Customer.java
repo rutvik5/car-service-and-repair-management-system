@@ -63,7 +63,7 @@ String userId;
             break;
       case 5:
             home.displayHomepage();
-
+            break;
     }
   }
 
@@ -957,9 +957,11 @@ private void getServiceType() throws SQLException {
       case 1:
               System.out.println("Repair appointment successfully saved");
               scheduleService();
-
+              break;
       case 2: scheduleRepair();
+      break;
       default: System.out.println("Enter a valid choice");
+      break;
     }
   }
 
@@ -979,9 +981,12 @@ private void getServiceType() throws SQLException {
       case 1:
               scheduleService();
               rescheduleFlag=false;
+              break;
 
       case 2: displayCustomerLanding(userId);
+      break;
       default: System.out.println("Enter a valid choice");
+      break;
     }
   }
 
