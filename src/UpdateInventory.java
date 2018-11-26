@@ -1,3 +1,4 @@
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,8 +31,10 @@ public class UpdateInventory {
 				deleteInventoryperAppointment(rsm.getInt(1));
 			}
 			System.out.println("Inventory Successfully updated...");
-			new Receptionist().displayReceptionistLanding(recpId);
+			CallableStatement cs = connection.prepareCall("{call notifyOrder}");
+			cs.executeQuery();
 			connection.close();
+			new Receptionist().displayReceptionistLanding(recpId);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

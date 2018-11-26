@@ -277,3 +277,19 @@ Price int,
 Warranty int,
 CONSTRAINT PK_Parts_Mapping PRIMARY KEY (PartID, Car_Company)
 );
+
+
+create or replace procedure notifyOrder
+is 
+notifyId number;
+Cursor c1 is
+select ORDERID from orderpart where To_DATE(expected_date,'DD-MM-YYYY')<(select SYSDATE from dual) and Actual_Date is null;
+begin
+FOR ord in c1
+   LOOP
+	  select max(NOTIFICATIONID)+1 into notifyId from notification;
+      insert into notification values (ord.ORDERID,notifyId,To_char(SYSDATE,'DD-MM_YYYY'),'Order is due. Please contact sender');
+	  commit;
+   END LOOP;
+End notifyOrder;
+/
