@@ -59,7 +59,7 @@ String userId;
             service(userId,"");
             break;
       case 4:
-            invoices(userId,"");
+            invoices(userId,"","");
             break;
       case 5:
             home.displayHomepage();
@@ -997,19 +997,21 @@ private void getServiceType() throws SQLException {
     }
   }
 
-  public void invoices(String userEmailId,String recp){
+  public void invoices(String userEmailId,String recp,String mgrId){
 	  userId=userEmailId;
 	  receptionistId=recp;
+	  managerid = mgrId;
     Scanner t= new Scanner(System.in);
     System.out.println("Please select the following");
     System.out.println("1.View Invoice Details\n2. Go Back");
     int user_choice= t.nextInt();
     if (user_choice == 1) viewInvoiceDetails();
-    if (user_choice != 1) {
-    	if (receptionistId.equals(""))
-    	displayCustomerLanding(userId);
+    if (user_choice != 1) if(receptionistId.equals("") && managerid.equals("")) {
+  	  displayCustomerLanding(userEmailId);
+    } else if (managerid.equals("")){
+  	  receptionist.displayReceptionistLanding(receptionistId);
     } else {
-    	receptionist.displayReceptionistLanding(receptionistId);
+  	  new Manager().displayManagerLanding(managerid);
     }
   }
 
@@ -1155,7 +1157,7 @@ private void getServiceType() throws SQLException {
     
     System.out.println("Enter 1 to Go Back");
     int user_choice= t.nextInt();
-    if (user_choice == 1) invoices(userId,receptionistId);
+    if (user_choice == 1) invoices(userId,receptionistId,managerid);
   }
 
 

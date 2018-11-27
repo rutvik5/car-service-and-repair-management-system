@@ -55,7 +55,7 @@ class Receptionist{
       break;
       case 7: System.out.println("Enter customer email id:");
 		id =t.nextLine();
-		customer.invoices(id, UserId);
+		customer.invoices(id, UserId,"");
       break;
       case 8: 
     	  new UpdateInventory().updateDailyInventory(UserId);
