@@ -63,7 +63,9 @@ public class Manager{
       break;
       case 10:getServiceHistory();
       break;
-      case 11:getInvoices();
+      case 11:System.out.println("Enter customer email id:");
+		id =t.nextLine();
+		cust.invoices(id, "",userId);
       break;
       case 12:home.displayHomepage();
       break;
@@ -84,7 +86,7 @@ private void addEmployee () {
 	    int role= t.nextInt();
 
 	    System.out.println("Name:\t");
-	    t.hasNextLine();
+	    t.nextLine();
 	    String name= t.nextLine();
 	    
 	    System.out.println("email:\t");

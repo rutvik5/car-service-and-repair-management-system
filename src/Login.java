@@ -64,6 +64,9 @@ private void enterPortal(Home home,int r,String user_id) {
     	  Receptionist recp = new Receptionist();
     	  recp.displayReceptionistLanding(user_id);
     	  break;
+      case 3:
+    	  new Employee().displayProfile(user_id);
+    	  break;
       case 4:
     	  Customer cust = new Customer();
     	  cust.displayCustomerLanding(user_id);

@@ -68,6 +68,7 @@ private void redirectAccording(String user_id) {
 	switch(role) {
 	case 1: manager.displayManagerLanding(user_id);
 	case 2: receptionist.displayReceptionistLanding(user_id); 
+	case 3: new Home().displayHomepage();
 	}
 }
 
@@ -266,7 +267,7 @@ private void viewProfile(String user_id) {
     stmt.setString(1, empID);
     rs = stmt.executeQuery();
     
-    while (rs.next()) {
+    if (rs.next()) {
       empID = rs.getString("EmpID");
       Emp_Name = rs.getString("Emp_Name");
       Emp_address = rs.getString("Emp_address");
@@ -278,6 +279,24 @@ private void viewProfile(String user_id) {
       Salary = rs.getInt("Salary");
       
     }
+    
+    stmt = connection.prepareStatement("SELECT E.EmpID, E.Emp_Name, E.Emp_address, E.Emp_email, E.Emp_Phone, S.Center_Name, E.Role, E.Emp_Start_Date, M.WAGES FROM Employee E, mechanic_emp M, WorksAt W, Service_Center S WHERE W.CenterID = S.CenterID AND E.EmpID = M.EmpID AND E.EmpID = ?");
+    stmt.setString(1, empID);
+    rs = stmt.executeQuery();
+    
+    if (rs.next()) {
+      empID = rs.getString("EmpID");
+      Emp_Name = rs.getString("Emp_Name");
+      Emp_address = rs.getString("Emp_address");
+      Emp_email = rs.getString("Emp_email");
+      Emp_Phone = rs.getString("Emp_Phone");
+      Center_Name = rs.getString("Center_Name");
+      Role = rs.getInt("Role");
+      Start_Date = rs.getString("Emp_Start_Date");
+      Salary = rs.getInt("Wages");
+      
+    }
+    
     System.out.println("");
     System.out.println("Employee ID: "+empID);
     System.out.println("Name: "+Emp_Name);
