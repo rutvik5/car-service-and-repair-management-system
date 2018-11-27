@@ -80,11 +80,11 @@ private void addEmployee () {
 	  
 	  System.out.println("Please enter the following");
 
-	    System.out.println("Add Role -1,2,3");
+	    System.out.println("Add Role -Manager(1),Receptionist(2),Mechanic(3)");
 	    int role= t.nextInt();
-
+t.nextLine();
 	    System.out.println("Name:\t");
-	    t.hasNextLine();
+	    
 	    String name= t.nextLine();
 	    
 	    System.out.println("email:\t");
@@ -128,6 +128,7 @@ private void addEmployee () {
 		      stmt.setString(2, password);
 		      stmt.setInt(3, role);
 		      stmt.executeUpdate();
+		      System.out.println("Employee added successfully");
 		      DBUtility.close(connection);
 
 		    }catch(SQLException e){
@@ -177,15 +178,15 @@ private void addEmployee () {
 	      Date date = new Date();  
 	      String current_day = formatter.format(date).split("-")[0];
 	      String current_month = formatter.format(date).split("-")[1];
-	      System.out.println(current_month);
+	      //System.out.println(current_month);
 	      String current_year = formatter.format(date).split("-")[2];
-	      System.out.println(current_year);
+	      //System.out.println(current_year);
 	      String emp_start_day = emp_start_date.split("-")[0];
-	      System.out.println(emp_start_day);
+	      //System.out.println(emp_start_day);
 	      String emp_start_month = emp_start_date.split("-")[1];
-	      System.out.println(emp_start_month);
+	      //System.out.println(emp_start_month);
 	      String emp_start_year = emp_start_date.split("-")[2];
-	      System.out.println(emp_start_year);
+	      //System.out.println(emp_start_year);
 	      
 	      stmt = connection.prepareStatement("SELECT role,emp_name FROM Employee WHERE empid = ?");
 	      stmt.setString(1, emp_id);
@@ -277,7 +278,7 @@ private void addEmployee () {
 	    		  System.out.println("Compensation Frequency: " + frequency );
 	    		  System.out.println("Number of days: " + units);
 	    		  System.out.println("Compensation: " + salary);
-	    		  System.out.println("Current Earnings" + current_earnings);
+	    		  System.out.println("Current Earnings: " + current_earnings);
 	    		  System.out.println("Year-to-Date Earnings: " + year_salary);
 	    		  System.out.println("");
 	    	  } 
@@ -348,7 +349,7 @@ private void addEmployee () {
 			    		  System.out.println("Compensation: " + wages);
 			    		  System.out.println("Compensation Frequency: " + frequency );
 			    		  System.out.println("Number of days: " + units);
-			    		  System.out.println("Current Earnings" + current_earnings);
+			    		  System.out.println("Current Earnings: " + current_earnings);
 			    		  System.out.println("Year-to-Date Earnings: " + year_salary);
 			    		  System.out.println("");
 			    		  
@@ -368,7 +369,7 @@ private void addEmployee () {
 			    		  System.out.println("Compensation Frequency: " + frequency );
 			    		  System.out.println("Number of days: " + units);
 			    		  System.out.println("Compensation: " + salary);
-			    		  System.out.println("Current Earnings" + current_earnings);
+			    		  System.out.println("Current Earnings: " + current_earnings);
 			    		  System.out.println("Year-to-Date Earnings: " + year_salary);
 			    		  System.out.println("");
 		    		  } 
@@ -1116,7 +1117,7 @@ private void addNewCarModel() {
 			      
 			    }
 			  a_basic_service_name = a_basic_service_name+ Integer.toString(a_parts_basicservice[i]) + ",";
-			  System.out.println(a_basic_service_name);
+			 // System.out.println(a_basic_service_name);
 		     }
 		  for(int i=0; i<b_parts.length; i++) {
 			  try{
@@ -1156,8 +1157,8 @@ private void addNewCarModel() {
 			      rs = stmt.executeQuery();
 			      while(rs.next()) {
 			    	  
-			    	  System.out.println("C");
-			    	  System.out.println(rs.getInt(1));
+			    	  //System.out.println("C");
+			    	  //System.out.println(rs.getInt(1));
 			    	  c_parts_basicservice [b_parts_basicservice.length+i] = rs.getInt(1);
 			      }
 			      stmt.close();
@@ -1266,17 +1267,18 @@ private void addNewCarModel() {
 		 }*/
 		 
 		 
-		 
+	  System.out.println("Car Successfully Added"); 
 	  System.out.println("1. Go Back");
 	  int inner_choice = t.nextInt();
 	  if (inner_choice ==1 )
-		  addNewCarModel();
+		  displayManagerLanding(userId);
 	  t.close();
 	  break;
 	  
-	  case 2: displayManagerLanding(userId);
-	  break;
+	  //case 2: displayManagerLanding(userId);
+	  //break;
 	  default: System.out.println("Please enter a valid choice");
+	  break;
 	  }
 	  t.close();
 	
