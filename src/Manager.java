@@ -177,16 +177,17 @@ t.nextLine();
 	      SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");  
 	      Date date = new Date();  
 	      String current_day = formatter.format(date).split("-")[0];
+	      System.out.println(current_day);
 	      String current_month = formatter.format(date).split("-")[1];
-	      //System.out.println(current_month);
+	      System.out.println(current_month);
 	      String current_year = formatter.format(date).split("-")[2];
-	      //System.out.println(current_year);
+	      System.out.println(current_year);
 	      String emp_start_day = emp_start_date.split("-")[0];
-	      //System.out.println(emp_start_day);
+	      System.out.println(emp_start_day);
 	      String emp_start_month = emp_start_date.split("-")[1];
-	      //System.out.println(emp_start_month);
+	      System.out.println(emp_start_month);
 	      String emp_start_year = emp_start_date.split("-")[2];
-	      //System.out.println(emp_start_year);
+	      System.out.println(emp_start_year);
 	      
 	      stmt = connection.prepareStatement("SELECT role,emp_name FROM Employee WHERE empid = ?");
 	      stmt.setString(1, emp_id);
@@ -296,15 +297,16 @@ t.nextLine();
 	    		    	}
 	    		    	
 	    		    	else if(Integer.parseInt(emp_start_day) < 15 && Integer.parseInt(current_day) > 15) {
-	    		    		shifts_worked =   (Integer.parseInt(current_month)- Integer.parseInt(emp_start_month)*2)+ 1;
+	    		    		shifts_worked =   ((Integer.parseInt(current_month)- Integer.parseInt(emp_start_month))*2)+ 1;
 	    		    	}
 	    		    	
 	    		    	else if(Integer.parseInt(emp_start_day) > 15 && Integer.parseInt(current_day) > 15) {
-	    		    		shifts_worked =   (Integer.parseInt(current_month)- Integer.parseInt(emp_start_month)*2) ;
+	    		    		shifts_worked =   (Integer.parseInt(current_month)- Integer.parseInt(emp_start_month))*2 ;
+	    		    		//System.out.println("shifts worked: "+ shifts_worked);
 	    		    	}
 	    		    	
 	    		    	else if(Integer.parseInt(emp_start_day) > 15 && Integer.parseInt(current_day) < 15) {
-	    		    		shifts_worked =   (Integer.parseInt(current_month)- Integer.parseInt(emp_start_month)*2) -1;
+	    		    		shifts_worked =   ((Integer.parseInt(current_month)- Integer.parseInt(emp_start_month))*2) -1;
 	    		    	}
 	    		    	
 	    		    	else System.out.println("");
@@ -315,22 +317,24 @@ t.nextLine();
 	    		    	  if(Integer.parseInt(emp_start_day) < 15)
 	    		    		  shifts_left = (12-Integer.parseInt(emp_start_month)) * 2;
 	    		    	  else
-	    		    		  shifts_left = (12-Integer.parseInt(emp_start_month)) * 2 -1;
+	    		    		  shifts_left = ((12-Integer.parseInt(emp_start_month)) * 2) -1;
 	    		    	  
 	    		    	  if(Integer.parseInt(current_day) > 15)
-	    		    		  shifts_worked = shifts_left + (Integer.parseInt(current_month)*2)-1 + (Integer.parseInt(current_year)-Integer.parseInt(emp_start_year)-1) * 24;
+	    		    		  shifts_worked = shifts_left + ((Integer.parseInt(current_month))*2)-1 + ((Integer.parseInt(current_year)-Integer.parseInt(emp_start_year))-1) * 24;
 	    		    	  else
-	    		    		  shifts_worked = shifts_left + (Integer.parseInt(current_month)*2)-2 + (Integer.parseInt(current_year)-Integer.parseInt(emp_start_year)-1) * 24;
+	    		    		  shifts_worked = shifts_left + ((Integer.parseInt(current_month))*2)-2 + ((Integer.parseInt(current_year)-Integer.parseInt(emp_start_year))-1) * 24;
 	    		    	  
 	    		      }
 	    		  
 	    		  
-	    		  
+	    		  int second_half = Integer.parseInt(emp_start_month);
+	    		  pay_period_year = Integer.parseInt(emp_start_year.trim()); 
+	    		  int emp_day=Integer.parseInt(emp_start_day);
 	    		  for(i=0; i<shifts_worked; i++) {
 	    			  frequency = "hourly";
 	    			  hours_worked = (int)(Math.random() * 11 + 1);
 		    		  
-	    			  if(Integer.parseInt(emp_start_day)<15) {
+	    			  if(emp_day<15) {
 		    			  first_paycheck_days = 15 - Integer.parseInt(emp_start_day);
 		    			  units = "15";
 		    			  float current_earnings = wages* hours_worked;
@@ -339,39 +343,43 @@ t.nextLine();
 		    			  
 		    			  year_salary = "";
 		    			  
-		    			  if(i==0) {
+		    			  if(i%2==0) {
 		    				units = Integer.toString(first_paycheck_days);  
 		    			  }
-		    			  System.out.println("Paycheck date: 15-" + emp_start_month + "-" + emp_start_year);
-			    		  System.out.println("Pay period: 01"+"-"+emp_start_month+"-"+emp_start_year);
+		    			  System.out.println("Paycheck date: 15-" + second_half + "-" + pay_period_year);
+			    		  System.out.println("Pay period: "+"-"+second_half+"-"+pay_period_year);
 			    		  System.out.println("Employee ID: " + emp_id);
 			    		  System.out.println("Employee Name: " + emp_name);
 			    		  System.out.println("Compensation: " + wages);
 			    		  System.out.println("Compensation Frequency: " + frequency );
-			    		  System.out.println("Number of days: " + units);
+			    		  System.out.println("Number of hours worked: " + hours_worked);
 			    		  System.out.println("Current Earnings: " + current_earnings);
 			    		  System.out.println("Year-to-Date Earnings: " + year_salary);
 			    		  System.out.println("");
-			    		  
+			    		  emp_day=25;
 			    		  
 		    			  
 		    		  }
 		    		  else {
 		    			  first_paycheck_days = 30 - Integer.parseInt(emp_start_day); 
-		    			  int second_half = Integer.parseInt(emp_start_month + 1);
-		    			  float current_earnings = wages* hours_worked;
 		    			  
-		    			  System.out.println("Paycheck date: 01-" + second_half + "-" + emp_start_year);
-			    		  System.out.println("Pay period: "+pay_period_month+"-"+pay_period_year);
+		    			  float current_earnings = wages* hours_worked;
+		    			  second_half++;
+		    			  if (second_half==13) {
+		    				  second_half=1;
+		    				  pay_period_year++;
+		    			  }
+		    			  System.out.println("Paycheck date: 01-" + second_half + "-" + pay_period_year);
+			    		  System.out.println("Pay period: "+(second_half-1)+"-"+pay_period_year);
 			    		  System.out.println("Employee ID: " + emp_id);
 			    		  System.out.println("Employee Name: " + emp_name);
-			    		  System.out.println("Compensation: " + salary);
+			    		  System.out.println("Compensation: " + wages);
 			    		  System.out.println("Compensation Frequency: " + frequency );
-			    		  System.out.println("Number of days: " + units);
-			    		  System.out.println("Compensation: " + salary);
+			    		  System.out.println("Number of hours worked: " + hours_worked);
 			    		  System.out.println("Current Earnings: " + current_earnings);
 			    		  System.out.println("Year-to-Date Earnings: " + year_salary);
 			    		  System.out.println("");
+			    		  emp_day=10;
 		    		  } 
 		    			    			  
 	    		  }
