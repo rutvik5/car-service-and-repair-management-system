@@ -233,10 +233,8 @@ CREATE TABLE LinkedTo(
     Appointmentno int,
     ServiceID int,
     CONSTRAINT PK_LinedTo PRIMARY KEY (Appointmentno, ServiceID ),
-    CONSTRAINT FK_Contains_ServiceID FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID)
-    ON DELETE CASCADE,
+    CONSTRAINT FK_Contains_ServiceID FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID),
     CONSTRAINT FK_Contains_Appointmentno  FOREIGN KEY (Appointmentno) REFERENCES Appointment(Appointmentno)
-    ON DELETE CASCADE
 );
 
 
@@ -293,3 +291,17 @@ FOR ord in c1
    END LOOP;
 End notifyOrder;
 /
+
+CREATE OR REPLACE TRIGGER appointment1
+AFTER DELETE on service
+FOR EACH ROW
+DECLARE
+value integer;
+BEGIN
+select a.appointmentno into  value from linkedto l, appointment a WHERE l.appointmentno=a.appointmentno AND l.serviceid= :old.serviceid;
+DELETE from linkedto where appointmentno = value; 
+DELETE FROM appointment where appointmentno = value;
+END;
+/
+
+

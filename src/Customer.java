@@ -50,16 +50,16 @@ String userId;
     int option= t.nextInt();
     switch(option){
       case 1:
-            profile(userId,receptionistId,managerid);
+            profile(userId,"","");
             break;
       case 2:
             registerCar(userId);
             break;
       case 3:
-            service(userId,receptionistId);
+            service(userId,"");
             break;
       case 4:
-            invoices(userId,receptionistId);
+            invoices(userId,"");
             break;
       case 5:
             home.displayHomepage();
@@ -353,9 +353,12 @@ String userId;
       break;
       case 2: scheduleRepair();
       break;
-      case 3: displayCustomerLanding(userId);
+      case 3: if (receptionistId.equals("")) {
+      	displayCustomerLanding(userId);
+      } else {
+      	receptionist.displayReceptionistLanding(receptionistId);
+      } 
       break;
-
     }
   }
   public void scheduleMaintenance(String license_plate, int current_mileage,String mechanic_name){
@@ -736,13 +739,14 @@ private void getAppointmentDate() throws ParseException, SQLException {
 			appointmenttoDelete= rs.getInt(1);
 			}
 		
-		stmt =connection.prepareStatement("delete from appointment where appointmentno=?");
+		/*stmt =connection.prepareStatement("delete from appointment where appointmentno=?");
 		stmt.setInt(1, appointmenttoDelete);
-		stmt.executeUpdate();
+		stmt.executeUpdate();*/
 		
 		stmt =connection.prepareStatement("delete from service where serviceid=?");
 		stmt.setInt(1, serviceId);
 		stmt.executeUpdate();
+		rescheduleFlag=false;
 	}
 		while(true) {
 		

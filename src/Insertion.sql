@@ -620,10 +620,10 @@ INSERT INTO Distributor
 VALUES('D0002', 'D2', 3, 19);
 
 
-insert into Appointment values(1,'28-11-2018',1,5,'Willis Martin');
-insert into Appointment values(2,'29-11-2018',2,8,'Willis Martin');
-insert into Appointment values(3,'29-11-2018',1,3,'Willis Martin');
-insert into Appointment values(4,'30-11-2018',15,21,'Willis Martin');
+insert into Appointment values(1,'28-11-2018',1,5,'Jacob Gloss');
+insert into Appointment values(2,'29-11-2018',2,8,'Jacob Gloss');
+insert into Appointment values(3,'29-11-2018',1,3,'Jacob Gloss');
+insert into Appointment values(4,'30-11-2018',15,21,'Jacob Gloss');
 
 insert into login values('950932130','abcde',1);
 insert into login values('634622236','12345',2);
